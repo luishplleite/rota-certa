@@ -1,0 +1,82 @@
+#!/bin/bash
+
+URL="https://ierpswfvlkrxcqvfepot.supabase.co/rest/v1"
+KEY="sb_secret_oqIp7ZHDpfSopVMUG1vvCQ_jwQZI_mt"
+
+# Headers padrão
+H_AUTH=(-H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Content-Type: application/json" -H "Prefer: return=representation")
+
+echo "🚀 Iniciando Teste de Carga em Todas as Tabelas..."
+
+# 1. ACCOUNTS
+echo "-> Tabela: accounts"
+ACC_RES=$(curl -s -X POST "$URL/accounts" "${H_AUTH[@]}" -d '{"name": "Luis Santos", "email": "luis.santos@teste.com"}')
+ACC_ID=$(echo $ACC_RES | grep -oP '"id":"\K[^"]+')
+echo "   ID: $ACC_ID"
+
+# 2. USERS
+echo "-> Tabela: users"
+USER_RES=$(curl -s -X POST "$URL/users" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"email\": \"luis.santos@teste.com\", \"password_hash\": \"hash123\", \"name\": \"Luis\", \"role\": \"driver\"}")
+USER_ID=$(echo $USER_RES | grep -oP '"id":"\K[^"]+')
+echo "   ID: $USER_ID"
+
+# 3. ITINERARIES (O roteiro do dia)
+echo "-> Tabela: itineraries"
+ITI_RES=$(curl -s -X POST "$URL/itineraries" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"user_id\": \"$USER_ID\", \"date\": \"$(date +%Y-%m-%d)\", \"name\": \"Rota Shopee Santos\", \"total_distance_km\": 45.5}")
+ITI_ID=$(echo $ITI_RES | grep -oP '"id":"\K[^"]+')
+echo "   ID: $ITI_ID"
+
+# 4. STOPS (As paradas da entrega)
+echo "-> Tabela: stops"
+curl -s -X POST "$URL/stops" "${H_AUTH[@]}" -d "[
+  {\"itinerary_id\": \"$ITI_ID\", \"account_id\": \"$ACC_ID\", \"fixed_identifier\": \"STOP-001\", \"address_full\": \"Av. Ana Costa, Santos\", \"latitude\": -23.96, \"longitude\": -46.33, \"sequence_order\": 1},
+  {\"itinerary_id\": \"$ITI_ID\", \"account_id\": \"$ACC_ID\", \"fixed_identifier\": \"STOP-002\", \"address_full\": \"Gonzaga, Santos\", \"latitude\": -23.97, \"longitude\": -46.32, \"sequence_order\": 2}
+]" > /dev/null
+
+# 5. EXPENSES (Combustível/Alimentação)
+echo "-> Tabela: expenses"
+curl -s -X POST "$URL/expenses" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"user_id\": \"$USER_ID\", \"category\": \"fuel\", \"amount\": 120.50, \"description\": \"Posto Ipiranga\"}" > /dev/null
+
+# 6. INCOMES (Gorjetas/Extras)
+echo "-> Tabela: incomes"
+curl -s -X POST "$URL/incomes" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"user_id\": \"$USER_ID\", \"category\": \"tip\", \"amount\": 15.00, \"description\": \"Gorjeta cliente legal\"}" > /dev/null
+
+# 7. SUBSCRIPTIONS
+echo "-> Tabela: subscriptions"
+curl -s -X POST "$URL/subscriptions" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"plan\": \"premium\", \"status\": \"active\"}" > /dev/null
+
+# 8. EARNINGS HISTORY (Consolidado)
+echo "-> Tabela: earnings_history"
+curl -s -X POST "$URL/earnings_history" "${H_AUTH[@]}" -d "{\"account_id\": \"$ACC_ID\", \"user_id\": \"$USER_ID\", \"itinerary_id\": \"$ITI_ID\", \"date\": \"$(date +%Y-%m-%d)\", \"deliveries_count\": 32, \"total_earnings\": 250.00}" > /dev/null
+
+echo -e "\n--- VERIFICAÇÃO FINAL ---"
+echo "Relatório simplificado (Users + Itineraries):"
+curl -s -X GET "$URL/users?select=name,itineraries(name,status)" -H "apikey: $KEY" -H "Authorization: Bearer $KEY"
+
+echo -e "\n\n✅ Todas as tabelas foram testadas."
+
+
+resultador dos testes
+
+ ~/Documents/testepostgres
+$ ./teste_db.sh
+🚀 Iniciando Teste de Carga em Todas as Tabelas...
+-> Tabela: accounts
+   ID: 3136657a-2757-4410-8fca-459c0fa1f79b
+-> Tabela: users
+   ID: 3c433a36-a421-498b-8b20-fd5d3521e95d
+-> Tabela: itineraries
+   ID: 5b570dc1-e341-46f2-b5b9-7345bd885b68
+-> Tabela: stops
+-> Tabela: expenses
+-> Tabela: incomes
+-> Tabela: subscriptions
+-> Tabela: earnings_history
+
+--- VERIFICAÇÃO FINAL ---
+Relatório simplificado (Users + Itineraries):
+[{"name":"Teste Manus","itineraries":[]},
+ {"name":"Luis","itineraries":[]},
+ {"name":"Luis","itineraries":[{"name": "Rota Shopee Santos", "status": "active"}]}]
+
+✅ Todas as tabelas foram testadas.

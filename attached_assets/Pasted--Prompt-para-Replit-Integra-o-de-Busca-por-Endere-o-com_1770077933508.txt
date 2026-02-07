@@ -1,0 +1,307 @@
+# Prompt para Replit - Integração de Busca por Endereço com BrasilAPI
+
+## 🎯 Objetivo
+Atualizar seu sistema atual para permitir busca de CEP e geolocalização **pelo endereço completo** (rua, número, bairro, cidade, estado) em vez de apenas pelo CEP.
+
+---
+
+## 📋 Instruções para o Replit
+
+Copie e cole este prompt no Replit AI (ou qualquer LLM que você usar):
+
+---
+
+### PROMPT PARA COPIAR E COLAR:
+
+```
+Preciso atualizar meu sistema de busca de CEP para aceitar busca por ENDEREÇO COMPLETO.
+
+REQUISITOS:
+1. O usuário deve poder digitar um endereço completo (ex: "Rua das Flores, 123, São Paulo, SP")
+2. O sistema deve usar Google Geocoding API para converter o endereço em coordenadas (latitude, longitude)
+3. Depois de obter as coordenadas, buscar o CEP correspondente na BrasilAPI V2
+4. Exibir no mapa interativo: marcador com a localização, infowindow com dados
+5. Mostrar os resultados: CEP, endereço, cidade, estado, bairro, latitude, longitude
+
+FLUXO TÉCNICO:
+1. Input: Campo de texto para endereço completo
+2. Validação: Verificar se endereço tem pelo menos 5 caracteres
+3. Geocodificação: Usar Google Geocoding API para obter lat/lng
+4. Busca de CEP: Usar BrasilAPI V2 (https://brasilapi.com.br/api/cep/v2/{cep})
+5. Exibição: Mostrar marcador no mapa, dados em card, infowindow automático
+
+APIS A USAR:
+- Google Geocoding API (já integrada no projeto)
+- BrasilAPI V2: GET https://brasilapi.com.br/api/cep/v2/{cep}
+- OpenStreetMap Nominatim (opcional, para reverse geocoding): GET https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lng}
+
+EXEMPLO DE RESPOSTA ESPERADA:
+{
+  "address": "Rua das Flores, 123, São Paulo, SP, Brasil",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "cep": "01310930",
+  "state": "SP",
+  "city": "São Paulo",
+  "neighborhood": "Centro",
+  "street": "Rua das Flores"
+}
+
+COMPONENTES A MODIFICAR:
+1. Input field: Trocar de "CEP" para "Endereço Completo"
+2. Função de busca: Criar função geocodeAddress() que chama Google Geocoding
+3. Função de CEP: Adaptar para buscar CEP pela coordenada
+4. Mapa: Atualizar para exibir marcador nas coordenadas geocodificadas
+5. Validação: Aceitar endereços com mínimo 5 caracteres
+
+TRATAMENTO DE ERROS:
+- Endereço não encontrado: Mostrar mensagem "Endereço não encontrado. Tente ser mais específico."
+- CEP não encontrado: Mostrar mensagem "CEP não encontrado para esta localização"
+- Erro de rede: Mostrar mensagem de erro genérica
+
+MELHORIAS OPCIONAIS:
+- Adicionar autocomplete de endereço (Google Places Autocomplete)
+- Permitir busca por CEP também (manter compatibilidade)
+- Histórico de buscas com localStorage
+- Exportar resultado em PDF/CSV
+```
+
+---
+
+## 🔧 Implementação Passo a Passo
+
+### Passo 1: Atualizar o Input
+**Trocar de:**
+```html
+<input placeholder="00000-000" type="text" />
+```
+
+**Para:**
+```html
+<input placeholder="Ex: Rua das Flores, 123, São Paulo, SP" type="text" />
+```
+
+---
+
+### Passo 2: Criar Função de Geocodificação
+**Adicionar esta função:**
+
+```javascript
+async function geocodeAddress(addressText) {
+  if (!map) {
+    console.error("Mapa não está pronto");
+    return;
+  }
+
+  const geocoder = new google.maps.Geocoder();
+
+  geocoder.geocode({ address: addressText }, async (results, status) => {
+    if (status === "OK" && results && results[0]) {
+      const result = results[0];
+      const lat = result.geometry.location.lat();
+      const lng = result.geometry.location.lng();
+      const formattedAddress = result.formatted_address;
+
+      // Extrair componentes do endereço
+      let street = "";
+      let city = "";
+      let state = "";
+      let neighborhood = "";
+
+      result.address_components.forEach((component) => {
+        if (component.types.includes("route")) {
+          street = component.long_name;
+        }
+        if (component.types.includes("administrative_area_level_2")) {
+          city = component.long_name;
+        }
+        if (component.types.includes("administrative_area_level_1")) {
+          state = component.short_name;
+        }
+        if (component.types.includes("sublocality_level_1")) {
+          neighborhood = component.long_name;
+        }
+      });
+
+      // Buscar CEP usando OpenStreetMap Nominatim
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+        );
+        const osmData = await response.json();
+        
+        let cepData = null;
+        if (osmData.address && osmData.address.postcode) {
+          // Buscar dados completos na BrasilAPI
+          const cepResponse = await fetch(
+            `https://brasilapi.com.br/api/cep/v2/${osmData.address.postcode}`
+          );
+          if (cepResponse.ok) {
+            cepData = await cepResponse.json();
+          }
+        }
+
+        // Preparar dados para exibição
+        const locationData = {
+          address: formattedAddress,
+          latitude: lat,
+          longitude: lng,
+          street: street || cepData?.street,
+          city: city || cepData?.city,
+          state: state || cepData?.state,
+          neighborhood: neighborhood || cepData?.neighborhood,
+          cep: cepData?.cep,
+          service: cepData?.service || "google_maps"
+        };
+
+        // Atualizar mapa e exibir resultados
+        updateMapLocation(lat, lng, locationData);
+        displayResults(locationData);
+
+      } catch (error) {
+        console.error("Erro ao buscar CEP:", error);
+        // Exibir resultado mesmo sem CEP
+        const locationData = {
+          address: formattedAddress,
+          latitude: lat,
+          longitude: lng,
+          street: street,
+          city: city,
+          state: state,
+          neighborhood: neighborhood
+        };
+        updateMapLocation(lat, lng, locationData);
+        displayResults(locationData);
+      }
+    } else {
+      console.error("Geocode não foi bem-sucedido por: " + status);
+      showError("Endereço não encontrado. Tente ser mais específico.");
+    }
+  });
+}
+```
+
+---
+
+### Passo 3: Atualizar Função de Busca
+**Trocar a chamada de busca de:**
+```javascript
+searchCEP(cepValue)
+```
+
+**Para:**
+```javascript
+geocodeAddress(addressValue)
+```
+
+---
+
+### Passo 4: Atualizar Validação
+**Trocar de:**
+```javascript
+if (cep.length !== 8) {
+  // erro
+}
+```
+
+**Para:**
+```javascript
+if (address.trim().length < 5) {
+  // erro
+}
+```
+
+---
+
+### Passo 5: Atualizar Exibição de Resultados
+**Adicionar campos:**
+- Endereço completo (do Google Geocoding)
+- Latitude e Longitude
+- CEP (se encontrado)
+- Cidade, Estado, Bairro
+
+---
+
+## 🗺️ Exemplo de Resposta do Mapa
+
+Quando o usuário buscar "Avenida Paulista, 1000, São Paulo, SP", o sistema deve:
+
+1. ✅ Geocodificar e obter: lat: -23.5614, lng: -46.6560
+2. ✅ Buscar CEP: 01311100
+3. ✅ Exibir marcador no mapa
+4. ✅ Mostrar infowindow com dados
+5. ✅ Exibir card com resultado completo
+
+---
+
+## 🔗 Referências de API
+
+### Google Geocoding (já integrada)
+```javascript
+const geocoder = new google.maps.Geocoder();
+geocoder.geocode({ address: "endereço aqui" }, callback);
+```
+
+### BrasilAPI V2
+```
+GET https://brasilapi.com.br/api/cep/v2/{cep}
+Resposta:
+{
+  "cep": "01310930",
+  "state": "SP",
+  "city": "São Paulo",
+  "neighborhood": "Centro",
+  "street": "Rua Doutor Luiz de Freitas Melro",
+  "location": {
+    "type": "Point",
+    "coordinates": {
+      "latitude": -23.5614,
+      "longitude": -46.6560
+    }
+  }
+}
+```
+
+### OpenStreetMap Nominatim (Reverse Geocoding)
+```
+GET https://nominatim.openstreetmap.org/reverse?format=json&lat={lat}&lon={lng}
+Resposta inclui: address.postcode (CEP)
+```
+
+---
+
+## ✅ Checklist de Implementação
+
+- [ ] Atualizar input field para aceitar endereço
+- [ ] Criar função geocodeAddress()
+- [ ] Integrar com Google Geocoding API
+- [ ] Integrar com OpenStreetMap Nominatim
+- [ ] Integrar com BrasilAPI V2
+- [ ] Atualizar função de exibição de resultados
+- [ ] Atualizar validação de entrada
+- [ ] Testar com vários endereços
+- [ ] Adicionar tratamento de erros
+- [ ] Testar no mapa (marcador, zoom, infowindow)
+
+---
+
+## 🎓 Dicas Importantes
+
+1. **Google Geocoding é mais preciso** que OpenStreetMap para endereços brasileiros
+2. **OpenStreetMap Nominatim é gratuito** e não precisa de chave de API
+3. **BrasilAPI pode não encontrar CEP** para todas as coordenadas (usar como complemento)
+4. **Sempre validar entrada** do usuário (mínimo 5 caracteres)
+5. **Usar try-catch** para tratamento de erros de rede
+
+---
+
+## 📞 Suporte
+
+Se tiver dúvidas:
+- Documentação BrasilAPI: https://brasilapi.com.br/docs
+- Google Maps API: https://developers.google.com/maps/documentation/geocoding
+- OpenStreetMap Nominatim: https://nominatim.org/
+
+---
+
+**Pronto! Copie o prompt acima e cole no seu Replit AI para que ele atualize seu sistema.**

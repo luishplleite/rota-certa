@@ -1,0 +1,254 @@
+Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+sharebx.js:8 1759236204268
+sharebx.js:20 1759236204268
+css.js:38 cssjs
+css.js:51 enabled.
+css.js:89 go
+css.js:336 cssjs
+App.tsx:61  GET https://981eb40e-e2e0-4d6a-b45b-978f4d0396a3-00-yx93wyoo1olb.pike.replit.dev/api/auth/me 401 (Unauthorized)
+checkAuth @ App.tsx:61
+(anonymous) @ App.tsx:78
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=e57068b9:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=e57068b9:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=e57068b9:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=e57068b9:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=e57068b9:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=e57068b9:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=e57068b9:19500
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18921
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=e57068b9:9166
+commitRootImpl @ chunk-LPF6KSF2.js?v=e57068b9:19485
+commitRoot @ chunk-LPF6KSF2.js?v=e57068b9:19330
+finishConcurrentRender @ chunk-LPF6KSF2.js?v=e57068b9:18858
+performConcurrentWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18768
+workLoop @ chunk-LPF6KSF2.js?v=e57068b9:197
+flushWork @ chunk-LPF6KSF2.js?v=e57068b9:176
+performWorkUntilDeadline @ chunk-LPF6KSF2.js?v=e57068b9:384Understand this error
+RouteMap.tsx:36 RouteMap: Mapbox token status: Present
+RouteMap.tsx:53 RouteMap: Initializing map with token: pk.eyJ1Ijo...
+RouteMap.tsx:71  POST https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoibGhwbCIsImEiOiJjbWN6bHlubGIweWl1MmpvajJjNDZsMTB1In0.VknoAZV_yynQiYi4nR3JjQ net::ERR_BLOCKED_BY_CLIENT
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.p @ mapbox-gl.js?v=e57068b9:16769
+postEvent @ mapbox-gl.js?v=e57068b9:18431
+processRequests @ mapbox-gl.js?v=e57068b9:18516
+queueRequest @ mapbox-gl.js?v=e57068b9:18436
+postStyleLoadEvent @ mapbox-gl.js?v=e57068b9:18511
+_postStyleLoadEvent @ mapbox-gl.js?v=e57068b9:32383
+(anonymous) @ mapbox-gl.js?v=e57068b9:31692
+fire @ mapbox-gl.js?v=e57068b9:854
+fire @ mapbox-gl.js?v=e57068b9:860
+o2 @ mapbox-gl.js?v=e57068b9:24123
+_load @ mapbox-gl.js?v=e57068b9:24134
+(anonymous) @ mapbox-gl.js?v=e57068b9:24042
+(anonymous) @ mapbox-gl.js?v=e57068b9:694
+Promise.then
+u2 @ mapbox-gl.js?v=e57068b9:666
+(anonymous) @ mapbox-gl.js?v=e57068b9:659
+Promise.then
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.m @ mapbox-gl.js?v=e57068b9:16767
+loadURL @ mapbox-gl.js?v=e57068b9:24040
+load @ mapbox-gl.js?v=e57068b9:24001
+_updateStyle @ mapbox-gl.js?v=e57068b9:31967
+setStyle @ mapbox-gl.js?v=e57068b9:31957
+Map @ mapbox-gl.js?v=e57068b9:31686
+(anonymous) @ RouteMap.tsx:71
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=e57068b9:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=e57068b9:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=e57068b9:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=e57068b9:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=e57068b9:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=e57068b9:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=e57068b9:19500
+commitRootImpl @ chunk-LPF6KSF2.js?v=e57068b9:19469
+commitRoot @ chunk-LPF6KSF2.js?v=e57068b9:19330
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18948
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=e57068b9:9166
+(anonymous) @ chunk-LPF6KSF2.js?v=e57068b9:18677
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=e57068b9:537
+flush @ @tanstack_react-query.js?v=e57068b9:551
+batch @ @tanstack_react-query.js?v=e57068b9:569
+#dispatch @ @tanstack_react-query.js?v=e57068b9:963
+setData @ @tanstack_react-query.js?v=e57068b9:672
+onSuccess @ @tanstack_react-query.js?v=e57068b9:865
+resolve @ @tanstack_react-query.js?v=e57068b9:442
+Promise.then
+run @ @tanstack_react-query.js?v=e57068b9:481
+start @ @tanstack_react-query.js?v=e57068b9:518
+fetch @ @tanstack_react-query.js?v=e57068b9:893
+#executeFetch @ @tanstack_react-query.js?v=e57068b9:1963
+onSubscribe @ @tanstack_react-query.js?v=e57068b9:1840
+subscribe @ @tanstack_react-query.js?v=e57068b9:19
+(anonymous) @ @tanstack_react-query.js?v=e57068b9:2962
+subscribeToStore @ chunk-LPF6KSF2.js?v=e57068b9:12032
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=e57068b9:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=e57068b9:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=e57068b9:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=e57068b9:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=e57068b9:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=e57068b9:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=e57068b9:19500
+commitRootImpl @ chunk-LPF6KSF2.js?v=e57068b9:19469
+commitRoot @ chunk-LPF6KSF2.js?v=e57068b9:19330
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18948
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=e57068b9:9166
+(anonymous) @ chunk-LPF6KSF2.js?v=e57068b9:18677Understand this error
+RouteMap.tsx:71  POST https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoibGhwbCIsImEiOiJjbWN6bHlubGIweWl1MmpvajJjNDZsMTB1In0.VknoAZV_yynQiYi4nR3JjQ net::ERR_BLOCKED_BY_CLIENT
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.p @ mapbox-gl.js?v=e57068b9:16769
+postEvent @ mapbox-gl.js?v=e57068b9:18431
+processRequests @ mapbox-gl.js?v=e57068b9:18474
+queueRequest @ mapbox-gl.js?v=e57068b9:18436
+postTurnstileEvent @ mapbox-gl.js?v=e57068b9:18461
+(anonymous) @ mapbox-gl.js?v=e57068b9:19804
+n2 @ mapbox-gl.js?v=e57068b9:19741
+(anonymous) @ mapbox-gl.js?v=e57068b9:19754
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+lt @ mapbox-gl.js?v=e57068b9:19754
+load @ mapbox-gl.js?v=e57068b9:19797
+onAdd @ mapbox-gl.js?v=e57068b9:19816
+addSource @ mapbox-gl.js?v=e57068b9:24641
+o2 @ mapbox-gl.js?v=e57068b9:24100
+_load @ mapbox-gl.js?v=e57068b9:24134
+(anonymous) @ mapbox-gl.js?v=e57068b9:24042
+(anonymous) @ mapbox-gl.js?v=e57068b9:694
+Promise.then
+u2 @ mapbox-gl.js?v=e57068b9:666
+(anonymous) @ mapbox-gl.js?v=e57068b9:659
+Promise.then
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.m @ mapbox-gl.js?v=e57068b9:16767
+loadURL @ mapbox-gl.js?v=e57068b9:24040
+load @ mapbox-gl.js?v=e57068b9:24001
+_updateStyle @ mapbox-gl.js?v=e57068b9:31967
+setStyle @ mapbox-gl.js?v=e57068b9:31957
+Map @ mapbox-gl.js?v=e57068b9:31686
+(anonymous) @ RouteMap.tsx:71
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=e57068b9:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=e57068b9:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=e57068b9:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=e57068b9:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=e57068b9:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=e57068b9:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=e57068b9:19500
+commitRootImpl @ chunk-LPF6KSF2.js?v=e57068b9:19469
+commitRoot @ chunk-LPF6KSF2.js?v=e57068b9:19330
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18948
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=e57068b9:9166
+(anonymous) @ chunk-LPF6KSF2.js?v=e57068b9:18677
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=e57068b9:537
+flush @ @tanstack_react-query.js?v=e57068b9:551
+batch @ @tanstack_react-query.js?v=e57068b9:569
+#dispatch @ @tanstack_react-query.js?v=e57068b9:963
+setData @ @tanstack_react-query.js?v=e57068b9:672
+onSuccess @ @tanstack_react-query.js?v=e57068b9:865
+resolve @ @tanstack_react-query.js?v=e57068b9:442
+Promise.then
+run @ @tanstack_react-query.js?v=e57068b9:481
+start @ @tanstack_react-query.js?v=e57068b9:518
+fetch @ @tanstack_react-query.js?v=e57068b9:893
+#executeFetch @ @tanstack_react-query.js?v=e57068b9:1963
+onSubscribe @ @tanstack_react-query.js?v=e57068b9:1840
+subscribe @ @tanstack_react-query.js?v=e57068b9:19
+(anonymous) @ @tanstack_react-query.js?v=e57068b9:2962
+subscribeToStore @ chunk-LPF6KSF2.js?v=e57068b9:12032
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=e57068b9:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=e57068b9:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=e57068b9:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=e57068b9:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=e57068b9:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=e57068b9:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=e57068b9:19500
+commitRootImpl @ chunk-LPF6KSF2.js?v=e57068b9:19469
+commitRoot @ chunk-LPF6KSF2.js?v=e57068b9:19330
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=e57068b9:18948
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=e57068b9:9166
+(anonymous) @ chunk-LPF6KSF2.js?v=e57068b9:18677Understand this error
+mapbox-gl.js?v=e57068b9:656  POST https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoibGhwbCIsImEiOiJjbWN6bHlubGIweWl1MmpvajJjNDZsMTB1In0.VknoAZV_yynQiYi4nR3JjQ net::ERR_BLOCKED_BY_CLIENT
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.p @ mapbox-gl.js?v=e57068b9:16769
+postEvent @ mapbox-gl.js?v=e57068b9:18431
+processRequests @ mapbox-gl.js?v=e57068b9:18570
+queueRequest @ mapbox-gl.js?v=e57068b9:18436
+postPerformanceEvent @ mapbox-gl.js?v=e57068b9:18524
+_render @ mapbox-gl.js?v=e57068b9:32351
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_render @ mapbox-gl.js?v=e57068b9:32342
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_render @ mapbox-gl.js?v=e57068b9:32342
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_update @ mapbox-gl.js?v=e57068b9:32295
+(anonymous) @ mapbox-gl.js?v=e57068b9:31694
+fire @ mapbox-gl.js?v=e57068b9:854
+fire @ mapbox-gl.js?v=e57068b9:860
+fire @ mapbox-gl.js?v=e57068b9:860
+_tileLoaded @ mapbox-gl.js?v=e57068b9:21106
+c2 @ mapbox-gl.js?v=e57068b9:19850
+processTask @ mapbox-gl.js?v=e57068b9:9286
+receive @ mapbox-gl.js?v=e57068b9:9281Understand this error
+mapbox-gl.js?v=e57068b9:656  POST https://events.mapbox.com/events/v2?access_token=pk.eyJ1IjoibGhwbCIsImEiOiJjbWN6bHlubGIweWl1MmpvajJjNDZsMTB1In0.VknoAZV_yynQiYi4nR3JjQ net::ERR_BLOCKED_BY_CLIENT
+l2 @ mapbox-gl.js?v=e57068b9:656
+(anonymous) @ mapbox-gl.js?v=e57068b9:713
+Oe @ mapbox-gl.js?v=e57068b9:716
+t.p @ mapbox-gl.js?v=e57068b9:16769
+postEvent @ mapbox-gl.js?v=e57068b9:18431
+processRequests @ mapbox-gl.js?v=e57068b9:18488
+queueRequest @ mapbox-gl.js?v=e57068b9:18436
+postMapLoadEvent @ mapbox-gl.js?v=e57068b9:18483
+_authenticate @ mapbox-gl.js?v=e57068b9:32379
+_render @ mapbox-gl.js?v=e57068b9:32351
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_render @ mapbox-gl.js?v=e57068b9:32342
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_render @ mapbox-gl.js?v=e57068b9:32342
+(anonymous) @ mapbox-gl.js?v=e57068b9:32430
+requestAnimationFrame
+frame @ mapbox-gl.js?v=e57068b9:557
+_triggerFrame @ mapbox-gl.js?v=e57068b9:32428
+triggerRepaint @ mapbox-gl.js?v=e57068b9:32425
+_update @ mapbox-gl.js?v=e57068b9:32295
+(anonymous) @ mapbox-gl.js?v=e57068b9:31694
+fire @ mapbox-gl.js?v=e57068b9:854
+fire @ mapbox-gl.js?v=e57068b9:860
+fire @ mapbox-gl.js?v=e57068b9:860
+_tileLoaded @ mapbox-gl.js?v=e57068b9:21106
+c2 @ mapbox-gl.js?v=e57068b9:19850
+processTask @ mapbox-gl.js?v=e57068b9:9286
+receive @ mapbox-gl.js?v=e57068b9:9281Understand this error
+PlanPage.tsx:90 Erro ao obter localização: Timeout expired
+navigator.geolocation.watchPosition.enableHighAccuracy @ PlanPage.tsx:90Understand this warning
+PlanPage.tsx:265 Erro ao capturar GPS: Timeout expired
+navigator.geolocation.getCurrentPosition.enableHighAccuracy @ PlanPage.tsx:265Understand this warning

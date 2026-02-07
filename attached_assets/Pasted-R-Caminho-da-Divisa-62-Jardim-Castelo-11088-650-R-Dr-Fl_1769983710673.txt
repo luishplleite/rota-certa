@@ -1,0 +1,61 @@
+R. Caminho da Divisa, 62	Jardim Castelo	11088-650
+R. Dr. Flor Horácio Cyrillo, 10	Jardim Castelo	-
+Caminho da Capela, 89	Rádio Clube	11088-550
+Rua Manoel Neves dos Santos, 156	Castelo	11087-290
+Rua Manoel Neves dos Santos, 141	Castelo	11087-290
+Rua Manoel Neves dos Santos, 100	Castelo	11087-290
+Rua Doutor Aniz Tranjan, 635	Castelo	11088-060
+Avenida Brigadeiro Faria Lima, 32	Rádio Clube	11088-300
+Rua Doutor Aniz Tranjan, 585	Castelo	11088-060
+Avenida Afonso Schmidt, 1128	Castelo	11087-000
+R. Fausto Felício Bruzarosco, 160	Castelo	11087-400
+Rua Arquiteto Romeu Esteves Martins Filho, 202	Castelo	11087-410
+Rua Doutor Alexandre Alves Peixoto Filho, 76	Castelo	11087-390
+Rua Doutor Alexandre Alves Peixoto Filho, 163	Castelo	11087-390
+Rua Doutor Alexandre Alves Peixoto Filho, 171	Castelo	11087-390
+Rua Armando de Almeida Alcântara, 131	Castelo	11087-380
+Rua Armando de Almeida Alcântara, 116	Castelo	11087-380
+Rua Waldemar Noschese, 87	Castelo	11087-340
+Avenida Afonso Schmidt, 780	Castelo	11087-000
+Rua Marechal Aguinaldo Caiado de Castro, 70	Castelo	11087-040
+R. Prof. Dr. Edmundo Beniamin Tourinho, 23	Castelo	11087-090
+Rua Professor Luís Gomes Cruz, 251	Castelo	11087-200
+Rua Coronel Raul Humaitá Villa Nova, 76	Castelo	11087-140
+Rua Coronel Raul Humaitá Villa Nova, 105	Castelo	11087-140
+Rua Professor Lúcio Martins Rodrigues, 10	São Manoel	11087-130
+Praça Prof. José Oliveira Lopes, 20	Rádio Clube	11088-290
+Rua Ismael Coelho de Souza, 143	Castelo	11087-050
+Rua Ismael Coelho de Souza, 60	Castelo	11087-050
+Praça Marechal Eurico Gaspar Dutra, 68	Rádio Clube	11088-260
+Praça Marechal Eurico Gaspar Dutra, 86	Rádio Clube	11088-200
+R. Contra Alm. Esculápio Cezar Paiva, 101	Rádio Clube	11088-320
+R. Mongaguá, 118	Rádio Clube	11088-310
+R. Mongaguá, 47	Rádio Clube	11088-310
+Rua José Alberto De Luca Pacheco, 1472	Rádio Clube	11088-170
+Rua José Alberto de Luca, 826	Rádio Clube	11088-170
+Rua Santa Rita de Cássia, 447	Rádio Clube	11088-200
+Rua Santa Rita de Cássia, 422	Rádio Clube	11088-200
+Rua José Casado Fernandes, 46	Rádio Clube	11088-280
+Rua Sancho de Barros Pimentel Sobrinho, 82	Rádio Clube	11088-230
+Rua Leonel Ferreira de Souza, 416	Rádio Clube	11088-210
+Avenida Brigadeiro Faria Lima, 391	Rádio Clube	11088-300
+Rua Governador Roberto Silveira, 534	Rádio Clube	11088-341
+Rua do Caminho São José, 257	Rádio Clube	11088-500
+Rua do Caminho São José, 820	Rádio Clube	11088-500
+Caminho São Sebastião, 29	Rádio Clube	11088-450
+Caminho São Sebastião, 104	Rádio Clube	11088-450
+Caminho São Sebastião, 93	V. N. São Vicente	-
+Caminho São Sebastião, 101	V. N. São Vicente	-
+Av. Brg. Faria Lima, 1460	Rádio Clube	11088-300
+Avenida Brigadeiro Faria Lima, 1468	Rádio Clube	11088-300
+Rua Professor Nelson Espíndola Lobato, 14	Rádio Clube	11088-330
+Rua Professor Nelson Espíndola Lobato, 270	Zona Noroeste	11010-010
+R. Prof. Nelson Espíndola Lobato, 247	Rádio Clube	-
+Rua Professor Nelson Espíndola Lobato, 111	Rádio Clube	11088-330
+Rua Leila Diniz, 12	Rádio Clube	11088-235
+Rua Jardelino José da Silva, 65	V. N. São Vicente	11088-225
+Rua Doutor Stefan Bryk, 177	Rádio Clube	11088-015
+Caminho São Sebastião, 388	V. N. São Vicente	11088
+Caminho São Sebastião, 328	Rádio Clube	11088-450
+Travessa Vila Telma, 43	Rádio Clube	11088-001
+Travessa Vila Telma, 7	Rádio Clube	11088-015

@@ -1,0 +1,160 @@
+Documentação Completa: API geocodebr
+Entregue a documentação completa do geocodebr com toda a referência da API. Aqui está o resumo executivo:
+
+O Que Você Recebeu
+📄 Arquivo Completo Disponível: geocodebr_docs.md
+A documentação contém todas as especificações técnicas:
+
+🎯 Três Funções Principais
+1️⃣ geocode() - Endereço → Coordenadas Precisas
+r
+geocode(
+  enderecos,
+  campos_endereco = definir_campos(),
+  resultado_completo = FALSE,
+  resolver_empates = TRUE,
+  resultado_sf = FALSE,
+  h3_res = NULL,
+  padronizar_enderecos = TRUE,
+  verboso = TRUE,
+  cache = TRUE,
+  n_cores = NULL
+)
+Retorna para cada endereço:
+
+lat, lon - Coordenadas em SIRGAS 2000
+
+precisao - Um de 6 níveis (numero, numero_aproximado, logradouro, cep, localidade, municipio)
+
+tipo_resultado - Código que indica exatamente quais campos foram usados
+
+desvio_metros - Margem de erro com 95% confiança
+
+2️⃣ geocode_reverso() - Coordenadas → Endereço Próximo
+r
+geocode_reverso(
+  pontos,        # sf object com geometria POINT
+  dist_max = 1000,
+  verboso = TRUE,
+  cache = TRUE,
+  n_cores = NULL
+)
+Encontra o endereço mais próximo de uma coordenada.
+
+3️⃣ busca_por_cep() - CEP → Endereços + Coordenadas
+r
+busca_por_cep(
+  cep,
+  h3_res = NULL,
+  resultado_sf = FALSE,
+  verboso = TRUE,
+  cache = TRUE
+)
+🎯 6 Níveis de Precisão
+Nível	Campos	Desvio	Confiabilidade
+numero	logradouro + número + CEP + localidade	±5-30m	⭐⭐⭐⭐⭐
+numero_aproximado	interpolação entre números	±20-100m	⭐⭐⭐⭐
+logradouro	rua + bairro (ponto médio)	±50-500m	⭐⭐⭐
+cep	CEP + localidade	±100-1000m	⭐⭐
+localidade	apenas bairro (centro)	±500-2km	⭐
+municipio	apenas município	±1-10km	⭐
+Coluna desvio_metros:
+
+Informa raio de 95% confiança
+
+≤30m = excelente
+
+≤100m = bom
+
+≤500m = aceitável
+
+>500m = use com cuidado
+
+💻 Exemplo Prático Completo
+r
+library(geocodebr)
+
+# 1. Seus dados
+enderecos <- data.frame(
+  rua = c("Avenida Paulista", "Rua 25 de Março"),
+  numero = c(1000, 150),
+  cidade = c("São Paulo", "São Paulo"),
+  estado = c("SP", "SP")
+)
+
+# 2. Mapear campos
+campos <- definir_campos(
+  logradouro = "rua",
+  numero = "numero",
+  municipio = "cidade",
+  estado = "estado"
+)
+
+# 3. Geocodificar
+resultado <- geocode(
+  enderecos = enderecos,
+  campos_endereco = campos,
+  resultado_completo = TRUE,  # Inclui nome do endereço encontrado
+  verboso = FALSE
+)
+
+# 4. Ver resultado
+head(resultado)
+# Retorna: lat, lon, precisao, tipo_resultado, desvio_metros, endereco_encontrado, etc
+🔍 Interpretar os Resultados
+Coluna tipo_resultado (Código 4 Caracteres)
+Exemplo: dn01
+
+1º char: d = determinístico, p = probabilístico (correção de typo com Jaro)
+
+2º char: n = numero, a = numero_aproximado, r = logradouro, c = cep, b = localidade, m = municipio
+
+3º-4º chars: Refinamento (01, 02, 03, 04) - quanto menor, mais preciso
+
+📊 Comparação: geocodebr vs Alternativas
+Critério	geocodebr	Nominatim	Geoapify	Google
+Custo	$0	$0	$0*	$200+
+Dados Brasil	✅ CNEFE IBGE	❌ OSM	✅ Bom	✅ Excelente
+Housenumber	⭐⭐⭐⭐⭐	⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐
+Precisão Brasil	⭐⭐⭐⭐⭐	⭐⭐	⭐⭐⭐⭐	⭐⭐⭐⭐⭐
+Self-hosted	✅	✅	❌	❌
+Sem limite	✅	✅	⚠️ 3k/dia	❌
+*Geoapify: 3.000 req/dia gratuito
+
+🚀 Performance
+1 milhão de endereços: ~3 minutos (8 cores)
+
+100 mil endereços: ~30 segundos (4 cores)
+
+10 mil endereços: ~5 segundos (1 core)
+
+🔗 Recursos Oficiais
+GitHub: https://github.com/ipeaGIT/geocodebr
+
+Documentação: 
+https://ipeagit.github.io/geocodebr/
+
+CRAN: https://cran.r-project.org/package=geocodebr
+
+✅ Para Sua Aplicação de Mapa de Paradas
+Recomendação:
+
+Instalar geocodebr (no servidor ou local):
+
+r
+install.packages("geocodebr")
+Criar wrapper REST (em R, Python ou Node.js):
+
+Recebe endereço + número
+
+Chama geocode()
+
+Retorna JSON com lat/lon + precisão
+
+Integrar no seu frontend:
+
+Chamar seu endpoint REST
+
+Plotar no mapa Leaflet/Google Maps
+
+Resultado esperado: Coordenadas muito mais precisas que Nominatim, com dados oficiais IBGE, completamente gratuito e sem limite de requisições. 🎯

@@ -1,0 +1,110 @@
+/* Custom JavaScript for the application */
+
+// 1. Função para manter o dispositivo sempre com a tela ligada
+function keepScreenOn() {
+    if (typeof median !== 'undefined' && median.screen && median.screen.keepScreenOn) {
+        median.screen.keepScreenOn();
+        console.log("WakeLock ativado via Median Bridge");
+    } else if (typeof gonative !== 'undefined' && gonative.screen && gonative.screen.keepScreenOn) {
+        gonative.screen.keepScreenOn();
+        console.log("WakeLock ativado via GoNative Bridge");
+    } else {
+        console.warn("Median/GoNative Bridge não detectado para WakeLock");
+    }
+}
+
+// 2. Configuração do Banco de Dados Offline (SQLite via IndexedDB wrapper ou LocalStorage)
+// Como o ambiente é WebView, usaremos IndexedDB para maior capacidade
+const OfflineDB = {
+    dbName: 'OptiRotaOfflineDB',
+    version: 1,
+    db: null,
+
+    init: function() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.version);
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                // Criar object stores baseados no schema fornecido
+                const tables = [
+                    'accounts', 'admin_settings', 'admins', 'device_sessions', 
+                    'earnings_history', 'expenses', 'financial_cycles', 'incomes', 
+                    'itineraries', 'payments', 'sessions', 'stop_counter', 
+                    'stops', 'subscriptions', 'sync_queue', 'users'
+                ];
+                tables.forEach(table => {
+                    if (!db.objectStoreNames.contains(table)) {
+                        db.createObjectStore(table, { keyPath: 'id' });
+                    }
+                });
+            };
+
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                console.log("Banco de dados offline inicializado");
+                resolve(this.db);
+            };
+
+            request.onerror = (event) => {
+                console.error("Erro ao abrir banco de dados:", event.target.error);
+                reject(event.target.error);
+            };
+        });
+    },
+
+    saveData: function(table, data) {
+        if (!this.db) return;
+        const transaction = this.db.transaction([table], 'readwrite');
+        const store = transaction.objectStore(table);
+        if (Array.isArray(data)) {
+            data.forEach(item => store.put(item));
+        } else {
+            store.put(data);
+        }
+    },
+
+    getData: function(table) {
+        return new Promise((resolve, reject) => {
+            if (!this.db) return reject("DB não inicializado");
+            const transaction = this.db.transaction([table], 'readonly');
+            const store = transaction.objectStore(table);
+            const request = store.getAll();
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+    }
+};
+
+// 3. Função para baixar dados iniciais e sincronizar
+async function syncInitialData() {
+    const baseUrl = 'https://rota.timepulseai.com.br/api'; // Assumindo endpoint padrão
+    const tablesToSync = ['accounts', 'users', 'itineraries', 'stops'];
+    
+    for (const table of tablesToSync) {
+        try {
+            const response = await fetch(`${baseUrl}/${table}`);
+            if (response.ok) {
+                const data = await response.json();
+                await OfflineDB.saveData(table, data);
+                console.log(`Sincronizado: ${table}`);
+            }
+        } catch (error) {
+            console.error(`Erro ao sincronizar ${table}:`, error);
+        }
+    }
+}
+
+// Inicialização automática
+document.addEventListener('DOMContentLoaded', () => {
+    keepScreenOn();
+    OfflineDB.init().then(() => {
+        // Tentar sincronizar se houver conexão
+        if (navigator.onLine) {
+            syncInitialData();
+        }
+    });
+});
+
+// Monitorar status de conexão
+window.addEventListener('online', syncInitialData);

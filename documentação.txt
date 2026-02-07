@@ -1,0 +1,428 @@
+================================================================================
+                            OPTIROTA - DOCUMENTACAO COMPLETA
+                     Sistema de Gestao Inteligente de Entregas
+================================================================================
+
+Versao: 1.0
+Data: Fevereiro 2026
+Desenvolvido para: Entregadores autonomos no Brasil
+
+================================================================================
+                              1. VISAO GERAL
+================================================================================
+
+O OptiRota e um sistema SaaS (Software as a Service) desenvolvido como PWA 
+(Progressive Web App) para gestao logistica e financeira de entregadores 
+autonomos. O aplicativo ajuda motoristas a planejar rotas de entrega, 
+acompanhar entregas em tempo real e calcular ganhos automaticamente.
+
+PRINCIPAIS FUNCIONALIDADES:
+- Planejamento de rotas com otimizacao automatica
+- Rastreamento de entregas (pendente, atual, entregue, falha)
+- Calculo automatico de ganhos com bonus de domingo
+- Contagem de pacotes por parada
+- Integracao com Waze e Google Maps
+- Funcionamento offline com sincronizacao automatica
+- Instalacao como app no celular (PWA)
+- Sistema de assinaturas com pagamento via Pix (Stripe)
+
+================================================================================
+                          2. ARQUITETURA DO SISTEMA
+================================================================================
+
+2.1 FRONTEND (client/)
+------------------------
+- Framework: React 19 com TypeScript
+- Roteamento: Wouter
+- Gerenciamento de Estado: Zustand
+- Requisicoes: TanStack React Query
+- Componentes UI: Shadcn/ui (Radix UI)
+- Estilizacao: Tailwind CSS
+- Mapas: Leaflet + OpenStreetMap
+- Geocodificacao: Nominatim (OpenStreetMap)
+- Roteamento: OSRM (Open Source Routing Machine)
+
+2.2 BACKEND (server/)
+----------------------
+- Framework: Express.js 5 com TypeScript
+- Sessoes: express-session com MemoryStore
+- API: RESTful sob prefixo /api/
+- Build: Vite (dev) + esbuild (producao)
+- Banco de Dados: Supabase (PostgreSQL)
+
+2.3 ESTRUTURA DE PASTAS
+------------------------
+client/               # Aplicacao React frontend
+  src/
+    components/       # Componentes UI (layout, mapa, endereco)
+    pages/            # Paginas (Login, Signup, Plan, Drive, Finance)
+    lib/              # Utilitarios, stores, IndexedDB
+    hooks/            # Hooks React customizados
+server/               # Aplicacao Express backend
+  index.ts            # Ponto de entrada do servidor
+  routes.ts           # Definicoes de rotas API
+  storage.ts          # Interface de armazenamento
+  supabase.ts         # Cliente Supabase
+  supabaseStorage.ts  # Implementacao Supabase
+  stripeClient.ts     # Cliente Stripe para pagamentos
+  webhookHandlers.ts  # Handlers de webhook Stripe
+shared/               # Codigo compartilhado
+  schema.ts           # Tipos, schemas Zod, regras de negocio
+
+================================================================================
+                        3. BANCO DE DADOS (SUPABASE)
+================================================================================
+
+3.1 TABELAS PRINCIPAIS
+-----------------------
+- accounts       : Gerenciamento de contas/empresas (multi-tenant)
+- users          : Usuarios com autenticacao customizada (bcrypt)
+- subscriptions  : Gerenciamento de trial e assinaturas
+- itineraries    : Gerenciamento de rotas/itinerarios
+- stops          : Paradas individuais de entrega
+- earnings_history: Historico de ganhos
+- expenses       : Despesas (combustivel, alimentacao, manutencao)
+- incomes        : Rendas extras (gorjetas, bonus)
+- payments       : Historico de pagamentos Stripe
+- sync_queue     : Fila de sincronizacao offline
+- sessions       : Gerenciamento de tokens de sessao
+- admins         : Usuarios administrativos
+
+3.2 ARQUIVOS SQL
+-----------------
+- db.sql           : Schema inicial completo (primeira instalacao)
+- dbatualizar.sql  : Script de atualizacao (seguro rodar multiplas vezes)
+- dbfinances.sql   : Funcoes financeiras com triggers automaticos
+
+================================================================================
+                         4. AUTENTICACAO E SEGURANCA
+================================================================================
+
+4.1 SISTEMA DE LOGIN
+---------------------
+- Autenticacao customizada (NAO usa Supabase Auth)
+- Senhas hasheadas com bcrypt (10 rounds)
+- Sessao de 30 dias (login persistente)
+- Usuario permanece logado ate fazer logout explicito
+- Multi-tenant: cada usuario pertence a uma conta
+
+4.2 SISTEMA DE TRIAL E ASSINATURA
+----------------------------------
+- Novas contas recebem 16 dias de trial gratuito
+- Apos expiracao do trial:
+  * Geracao de rotas continua funcionando
+  * Dados financeiros sao bloqueados/blur
+  * Botao de assinar aparece (R$ 29,90/mes)
+- Pagamento via Pix (QR Code) usando Stripe
+- Assinatura ativada por 30 dias apos pagamento
+
+4.3 SISTEMA ADMIN
+------------------
+- Rotas: /admin/login, /admin/signup, /admin/dashboard
+- Funcionalidades:
+  * Visualizar todos usuarios e status de assinatura
+  * Ajustar dias de trial
+  * Ativar/estender assinaturas manualmente
+  * Visualizar historico de pagamentos
+
+================================================================================
+                        5. VARIAVEIS DE AMBIENTE
+================================================================================
+
+5.1 OBRIGATORIAS (Secrets)
+---------------------------
+SUPABASE_URL               = URL do projeto Supabase
+                             Ex: https://xxxxx.supabase.co
+
+SUPABASE_SERVICE_ROLE_KEY  = Chave service_role do Supabase (JWT)
+                             Encontrar em: Settings > API > service_role
+                             Comeca com: eyJhbGciOiJIUzI1NiIs...
+
+5.2 STRIPE (Pagamentos)
+------------------------
+STRIPE_SECRET_KEY          = Chave secreta Stripe
+                             Ex: sk_live_xxx ou sk_test_xxx
+
+STRIPE_PUBLISHABLE_KEY     = Chave publica Stripe
+                             Ex: pk_live_xxx ou pk_test_xxx
+
+STRIPE_WEBHOOK_SECRET      = Segredo do endpoint webhook
+                             Ex: whsec_xxx
+
+5.3 GEOAPIFY (Geocodificacao)
+------------------------------
+GEOAPIFY_API_KEY_1         = Chave API Geoapify (principal)
+GEOAPIFY_API_KEY_2         = Chave API Geoapify (backup)
+GEOAPIFY_API_KEY_3         = Chave API Geoapify (backup)
+GEOAPIFY_API_KEY_4         = Chave API Geoapify (backup)
+GEOAPIFY_API_KEY_5         = Chave API Geoapify (backup)
+
+5.4 AUTOMATICAS (Gerenciadas pelo Sistema)
+-------------------------------------------
+DATABASE_URL               = URL do banco PostgreSQL
+SESSION_SECRET             = Segredo para sessoes
+REPLIT_DOMAINS             = Dominios Replit
+REPLIT_DEV_DOMAIN          = Dominio de desenvolvimento
+
+================================================================================
+                          6. ENDPOINTS DA API
+================================================================================
+
+6.1 AUTENTICACAO
+-----------------
+POST   /api/auth/signup    - Criar nova conta com trial
+POST   /api/auth/login     - Login com email/senha
+POST   /api/auth/logout    - Logout
+GET    /api/auth/me        - Usuario atual e assinatura
+
+6.2 ASSINATURA
+---------------
+GET    /api/subscription   - Status da assinatura
+
+6.3 CONFIGURACOES
+------------------
+GET    /api/settings       - Configuracoes de ganhos da conta
+PATCH  /api/settings       - Atualizar configuracoes de ganhos
+
+6.4 ITINERARIOS
+----------------
+GET    /api/itinerary      - Itinerario ativo
+POST   /api/itinerary      - Criar novo itinerario
+
+6.5 PARADAS
+------------
+GET    /api/stops          - Paradas do dia
+POST   /api/stops          - Adicionar nova parada
+PATCH  /api/stops/:id/status - Atualizar status da parada
+DELETE /api/stops/:id      - Deletar parada
+POST   /api/stops/optimize - Otimizar ordem da rota
+
+6.6 ESTATISTICAS/GANHOS
+------------------------
+GET    /api/stats          - Estatisticas de entrega e ganhos
+GET    /api/earnings       - Ganhos (bloqueado se trial expirado)
+GET    /api/earnings/weekly  - Resumo semanal de ganhos
+GET    /api/earnings/monthly - Resumo mensal de ganhos
+
+6.7 DESPESAS
+-------------
+GET    /api/expenses       - Todas despesas (suporta startDate/endDate)
+GET    /api/expenses/today - Despesas do dia
+POST   /api/expenses       - Criar despesa
+DELETE /api/expenses/:id   - Deletar despesa
+
+6.8 RENDAS EXTRAS
+------------------
+GET    /api/incomes        - Todas rendas extras
+POST   /api/incomes        - Criar renda extra
+DELETE /api/incomes/:id    - Deletar renda
+
+6.9 PAINEL FINANCEIRO
+----------------------
+GET    /api/finance/summary - Dashboard financeiro completo
+
+6.10 STRIPE
+------------
+GET    /api/stripe/config           - Configuracao Stripe (chave publica)
+POST   /api/stripe/create-payment   - Criar pagamento Pix
+GET    /api/stripe/payment-status   - Status do pagamento
+POST   /api/stripe/webhook          - Webhook para eventos Stripe
+
+================================================================================
+                      7. REGRAS DE NEGOCIO
+================================================================================
+
+7.1 VALORES PADRAO
+-------------------
+- Ganho por entrega: R$ 2,80
+- Bonus de domingo: R$ 100,00 apos 50 entregas
+- Periodo de trial: 16 dias
+- Assinatura mensal: R$ 29,90
+
+7.2 STATUS DE PARADAS
+----------------------
+pending   -> current   -> delivered (entregue)
+                      -> failed (falha)
+
+7.3 CONFIGURACOES POR CONTA
+-----------------------------
+Cada conta pode customizar:
+- earningPerDelivery    : Valor por entrega
+- sundayBonusThreshold  : Entregas para bonus domingo
+- sundayBonusValue      : Valor do bonus domingo
+
+================================================================================
+                    8. ARQUITETURA OFFLINE-FIRST
+================================================================================
+
+8.1 ARMAZENAMENTO LOCAL (IndexedDB)
+------------------------------------
+- stops         : Paradas com campo syncStatus
+- itineraries   : Dados de rota
+- syncQueue     : Operacoes pendentes de sincronizacao
+- settings      : Configuracoes da conta
+- userSession   : Sessao do usuario em cache
+- mapTiles      : Tiles de mapa offline
+
+8.2 MECANISMO DE SINCRONIZACAO
+-------------------------------
+1. Todas operacoes de escrita salvam localmente primeiro
+2. Se online, sincroniza imediatamente com Supabase
+3. Se offline, adiciona a syncQueue
+4. Quando conexao retorna, sincroniza operacoes pendentes
+5. Tenta ate 3 vezes antes de descartar operacoes falhas
+
+8.3 SERVICE WORKER (sw.js)
+---------------------------
+- Cache de todos assets (JS, CSS, imagens)
+- Network First para chamadas API
+- Cache First para assets estaticos
+- Suporte a background sync
+
+================================================================================
+                      9. PWA - PROGRESSIVE WEB APP
+================================================================================
+
+9.1 ARQUIVOS
+-------------
+client/public/
+  manifest.json    - Manifest PWA com info e icones
+  sw.js            - Service Worker
+  pwa/icons/       - Icones em multiplos tamanhos (48-512px)
+
+9.2 FUNCIONALIDADES
+--------------------
+- Instalavel no celular (Android/iOS)
+- Funciona offline
+- Atalhos rapidos para paginas principais
+- Wake Lock API - mantem tela ativa durante entregas
+
+9.3 INSTALACAO NO CELULAR
+--------------------------
+Android: Chrome > Menu > "Adicionar a tela inicial"
+iOS: Safari > Compartilhar > "Adicionar a Tela de Inicio"
+
+================================================================================
+                   10. INTEGRACAO COM STRIPE
+================================================================================
+
+10.1 CONFIGURACAO DO WEBHOOK
+-----------------------------
+1. Acesse https://dashboard.stripe.com/webhooks
+2. Clique em "Add endpoint"
+3. URL: https://seu-dominio.com/api/stripe/webhook
+4. Eventos necessarios:
+   - checkout.session.completed
+   - customer.subscription.created
+   - customer.subscription.updated
+   - customer.subscription.deleted
+   - invoice.paid
+   - invoice.payment_failed
+5. Copie o "Signing secret" (whsec_xxx)
+
+10.2 FLUXO DE PAGAMENTO
+------------------------
+1. Usuario clica em "Assinar"
+2. Sistema gera QR Code Pix via Stripe
+3. Usuario paga com app do banco
+4. Webhook confirma pagamento
+5. Assinatura e ativada por 30 dias
+
+================================================================================
+                  11. DEPLOY EM SERVIDOR EXTERNO
+================================================================================
+
+11.1 VARIAVEIS NECESSARIAS
+---------------------------
+DATABASE_URL=postgresql://user:pass@host:5432/db
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=eyJxxx...
+STRIPE_SECRET_KEY=sk_live_xxx
+STRIPE_PUBLISHABLE_KEY=pk_live_xxx
+STRIPE_WEBHOOK_SECRET=whsec_xxx
+GEOAPIFY_API_KEY_1=sua_chave
+SESSION_SECRET=uma_string_segura_aleatoria
+
+11.2 COMANDOS
+--------------
+npm install           - Instalar dependencias
+npm run build         - Compilar para producao
+npm start             - Iniciar servidor (producao)
+npm run dev           - Iniciar servidor (desenvolvimento)
+
+11.3 PORTAS
+------------
+- Porta padrao: 5000
+- Configuravel via variavel PORT
+
+================================================================================
+                      12. SERVICOS EXTERNOS UTILIZADOS
+================================================================================
+
+SUPABASE (supabase.com)
+- Banco de dados PostgreSQL
+- Armazenamento de dados
+
+STRIPE (stripe.com)
+- Processamento de pagamentos
+- Pagamentos via Pix
+
+GEOAPIFY (geoapify.com)
+- API de geocodificacao
+- Busca de enderecos
+
+OPENSTREETMAP (openstreetmap.org)
+- Mapas gratuitos
+- Tiles de mapa
+
+NOMINATIM (nominatim.org)
+- Geocodificacao de enderecos
+- Busca de localizacao
+
+OSRM (project-osrm.org)
+- Calculo de rotas
+- Otimizacao de trajetos
+
+================================================================================
+                          13. RESOLUCAO DE PROBLEMAS
+================================================================================
+
+ERRO: "Email ou senha invalidos"
+---------------------------------
+1. Verificar se usuario existe no Supabase
+2. Verificar SUPABASE_SERVICE_ROLE_KEY (deve comecar com eyJ...)
+3. A chave sb_secret_... e senha do banco, NAO e a service role key
+
+ERRO: "SUPABASE_URL is missing"
+--------------------------------
+1. Adicionar variavel SUPABASE_URL
+2. Formato: https://xxxxx.supabase.co
+
+ERRO: "Stripe connection not found"
+------------------------------------
+1. Configurar STRIPE_SECRET_KEY
+2. Configurar STRIPE_PUBLISHABLE_KEY
+3. Reiniciar servidor
+
+MAPA NAO CARREGA
+-----------------
+1. Verificar conexao com internet
+2. Verificar se Leaflet esta importado corretamente
+3. CSS do Leaflet deve estar carregado
+
+PAGAMENTO NAO CONFIRMA
+-----------------------
+1. Verificar STRIPE_WEBHOOK_SECRET
+2. Verificar se webhook esta configurado no Stripe Dashboard
+3. URL do webhook deve ser acessivel publicamente
+
+================================================================================
+                              14. CONTATO E SUPORTE
+================================================================================
+
+Este sistema foi desenvolvido para entregadores autonomos no Brasil.
+Para suporte tecnico, entre em contato com o administrador do sistema.
+
+================================================================================
+                        FIM DA DOCUMENTACAO
+================================================================================

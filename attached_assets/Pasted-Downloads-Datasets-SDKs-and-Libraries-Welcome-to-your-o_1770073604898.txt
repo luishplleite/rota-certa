@@ -1,0 +1,287 @@
+Downloads: Datasets, SDKs, and Libraries
+Welcome to your one‑stop download hub. Grab Geoapify SDKs and ready‑to‑use datasets with clear install options, direct download links, and package registry references. This page brings together downloadable software and downloadable data files in one place for easy reference.
+
+On this page
+
+Postcodes
+OSM Localities
+Timezone Database
+SDKs and Libraries
+Other Libraries
+Read More
+FAQ
+Postcodes Dataset (Direct Downloads)
+Geoapify
+Download
+This downloadable data files for postal codes (ZIP codes) including their geometries for multiple countries. Use it for geolocation, logistics planning, address validation, analytics, and map visualizations.
+
+Country / Region	Data Source	License	File
+Germany	Compiled by Geoapify from OpenStreetMap	ODbL	Download
+France	Compiled by Geoapify from Géoclip	ODbL	Download
+Great Britain — Post towns	Compiled by Geoapify from OpenStreetMap	ODbL	Download
+Great Britain — Outward code boundaries	Compiled by Geoapify from OpenStreetMap	ODbL	Download
+Norway	Compiled by Geoapify from Geonorge	CC BY 4.0	Download
+United States	Compiled by Geoapify from U.S. Census Bureau (TIGER/Line ZCTA)	U.S. Census licensing & terms	Download
+For details and FAQs, learn more on the Postcodes dataset page.
+
+Questions? Contact us or email info@geoapify.com.
+
+Example: Record
+A single postcode feature as it appears in the NDJSON file (one JSON object per line). Key fields: postcode, country_code, centroid (lon, lat), geometry (area shape), and tags from the original source:
+
+
+{"postcode":"84489","country_code":"DE","lon":12.818840228751325,"lat":48.16300274989854,"area":19854177,"tags":{"ref":84489,"note":"84489 Burghausen","type":"boundary","osm_id":1120224,"source":"http://wiki.openstreetmap.org/wiki/Import/Catalogue/Postleitzahlen_Deutschland_2010","boundary":"postal_code","osm_type":"r","postal_code":84489,"country_code":"de","postal_code_level":8},"geometry":{"type": "Polygon", "coordinates": [[[12.7581494, 48.1317058], [12.7589167, 48.1311217], [12.7613756, 48.1318264], [12.7609692, 48.1316275], [12.761124, 48.1314712], [12.7624129, 48.1315879], [12.7627062, 48.1308015], [12.7636359, 48.1308619], [12.7637349, 48.130626], [12.7634803, 48.1304485], [12.7636071, 48.1296363], [12.7613446, 48.128861], [12.7590331, 48.1276763], [12.7594912, 48.1272908], [12.7615482, 48.1282027], [12.7647553, 48.1289069], [12.7697972, 48.128524], [12.7729521, 48.1278556], [12.775509, 48.126926], [12.7815657, 48.1233297], [12.7836695, 48.1228394], [12.785704, 48.1230705], [12.7869191, 48.1237109], [12.7881592, 48.1248462], [12.7918616, 48.1306573], [12.797286, 48.1383463], [12.7977085, 48.1391552], [12.7979773, 48.1406921], [12.7976342, 48.1445284], [12.7983582, 48.1458035], [12.7994023, 48.1467763], [12.806866, 48.1500156], [12.8117505, 48.151553], [12.8162377, 48.1522187], [12.8248797, 48.1522876], [12.8275304, 48.1529122], [12.8327577, 48.1560838], [12.8345785, 48.1581508], [12.8351568, 48.1597207], [12.8347867, 48.1633808], [12.8351459, 48.1643403], [12.8360466, 48.1653333], [12.8383967, 48.1661677], [12.839599, 48.1663034], [12.8434145, 48.1656114], [12.8461685, 48.1662695], [12.847214, 48.1669188], [12.8480797, 48.1678409], [12.8491545, 48.1706006], [12.8494757, 48.1722115], [12.8519589, 48.1769888], [12.8540807, 48.1793497], [12.852411, 48.179953], [12.8524402, 48.1801327], [12.8545624, 48.1830615], [12.8548701, 48.1842436], [12.8569115, 48.1876905], [12.8556846, 48.187937], [12.8551258, 48.1877182], [12.8544629, 48.1877317], [12.8534623, 48.1884223], [12.8520843, 48.1905811], [12.8523891, 48.1925391], [12.8493073, 48.1952116], [12.8482487, 48.1958095], [12.8473626, 48.195786], [12.8442834, 48.1978744], [12.8429911, 48.1993153], [12.8425239, 48.2003009], [12.8424669, 48.2011473], [12.8404418, 48.2006671], [12.8367518, 48.2019341], [12.8344425, 48.2031006], [12.8320098, 48.2035628], [12.8315258, 48.2038514], [12.8304267, 48.1987411], [12.8166856, 48.1960193], [12.816797, 48.1957577], [12.8160798, 48.1949591], [12.8131764, 48.1927805], [12.8118039, 48.191003], [12.813115, 48.1905212], [12.8142192, 48.1897375], [12.8150255, 48.1885826], [12.8153245, 48.1875218], [12.8164432, 48.1855119], [12.816512, 48.18485], [12.8175633, 48.1831549], [12.8184314, 48.1821398], [12.8210177, 48.1799353], [12.8223236, 48.1776972], [12.8208529, 48.1772096], [12.8204125, 48.177508], [12.8190491, 48.1769254], [12.8164348, 48.1767555], [12.8157272, 48.1763008], [12.8153125, 48.1765339], [12.8146721, 48.1757217], [12.8160467, 48.1747048], [12.8130942, 48.1731546], [12.8134459, 48.1708523], [12.8121563, 48.1709421], [12.8109531, 48.1705921], [12.8086695, 48.1703292], [12.8093542, 48.1680723], [12.8086482, 48.1679926], [12.8087354, 48.1677905], [12.8080037, 48.1675942], [12.8089108, 48.1662139], [12.8078292, 48.1658181], [12.8087042, 48.1647588], [12.8057845, 48.1637376], [12.8010948, 48.162561], [12.8007056, 48.1626247], [12.796751, 48.1617732], [12.7919384, 48.1603771], [12.7911472, 48.1587534], [12.7891738, 48.1580087], [12.787714, 48.1565446], [12.7859183, 48.1505712], [12.7846806, 48.14876], [12.7760498, 48.1436765], [12.7737679, 48.1429077], [12.7745194, 48.1425911], [12.7728516, 48.1414391], [12.7722963, 48.140506], [12.7707535, 48.1390106], [12.7696009, 48.1383512], [12.7698168, 48.1379037], [12.7644771, 48.1339709], [12.7644709, 48.1334724], [12.7649303, 48.1328714], [12.7634292, 48.1323435], [12.7601323, 48.1321786], [12.7594287, 48.131927], [12.7591521, 48.132151], [12.7581494, 48.1317058]]]}}
+Example: Read NDJSON (Node.js)
+Reads an NDJSON file where each line is a separate JSON object. This example loads the whole file into memory; for large files, prefer a streaming approach (e.g., readline or the ndjson package):
+
+
+import fs from 'fs';
+
+const lines = fs.readFileSync('postcodes.ndjson', 'utf8')
+  .split('\n')
+  .filter(Boolean);
+
+const features = lines.map(line => JSON.parse(line));
+console.log('Loaded records:', features.length);
+OSM Localities Dataset (Cities, Towns, Villages)
+Geoapify
+Download
+Geoapify OSM Locality Extracts — curated country‑level datasets of cities, towns, villages, and hamlets derived from OpenStreetMap. Each archive contains NDJSON files grouped by place type plus matching administrative borders when available.
+
+Learn more on the Localities dataset page.
+
+Country / Region	Data Source	License	File
+Multiple countries (by country)	Compiled by Geoapify from OpenStreetMap	ODbL	Go to files
+What’s inside each archive?
+place-city.ndjson, place-town.ndjson, place-village.ndjson, place-hamlet.ndjson
+One locality per line in NDJSON format with coordinates, bounding box, multilingual names, address metadata, and optional population
+border objects embed the corresponding administrative relation geometry when a match is found
+inferred_type highlights classifications derived from address hints instead of explicit place nodes
+Data sample (NDJSON lines)
+
+{"name":"Gubin","other_names":{"name:de":"Guben","name:lt":"Gubinas","name:pl":"Gubin","name:ru":"Губин","name:uk":"Губін","name:dsb":"Gubin"},"display_name":"Gubin, powiat krośnieński, województwo lubuskie, 66-620, Polska","address":{"town":"Gubin","county":"powiat krośnieński","state":"województwo lubuskie","ISO3166-2-lvl4":"PL-08","postcode":"66-620","country":"Polska","country_code":"pl"},"population":16114,"osm_type":"node","osm_id":31802728,"type":"town","location":[14.7293172,51.9509156],"bbox":[14.6893172,51.9109156,14.7693172,51.9909156],"border":[{"name":"Gubin","other_names":{"name:de":"Guben","name:pl":"Gubin","name:lt":"Gubinas","name:ru":"Губин","name:uk":"Губін","name:dsb":"Gubin"},"display_name":"Gubin, powiat krośnieński, województwo lubuskie, 66-620, Polska","address":{"town":"Gubin","county":"powiat krośnieński","state":"województwo lubuskie","ISO3166-2-lvl4":"PL-08","postcode":"66-620","country":"Polska","country_code":"pl"},"population":16427,"osm_type":"relation","osm_id":2880619,"type":"administrative","location":[14.7293172,51.9509156],"bbox":[14.7048038,51.9184289,14.7926746,51.9961884]},{"name":"Gubin","other_names":{"name:de":"Guben","name:pl":"Gubin"},"display_name":"Gubin, powiat krośnieński, województwo lubuskie, 66-620, Polska","address":{"administrative":"Gubin","town":"Gubin","county":"powiat krośnieński","state":"województwo lubuskie","ISO3166-2-lvl4":"PL-08","postcode":"66-620","country":"Polska","country_code":"pl"},"population":16427,"osm_type":"relation","osm_id":2880625,"type":"administrative","location":[14.737042559250952,51.95734105],"bbox":[14.7048038,51.9184289,14.7926746,51.9961884]}]}
+{"name":"Hajnówka","other_names":{"name:be":"Гайнаўка","name:lt":"Hainuvka","name:pl":"Hajnówka","name:ru":"Хайнувка","name:sr":"Хајновка","name:uk":"Хайнувка","name:be-tarask":"Гайнаўка"},"display_name":"Hajnówka, powiat hajnowski, województwo podlaskie, 17-200, Polska","address":{"town":"Hajnówka","county":"powiat hajnowski","state":"województwo podlaskie","ISO3166-2-lvl4":"PL-20","postcode":"17-200","country":"Polska","country_code":"pl"},"population":19667,"osm_type":"node","osm_id":246690942,"type":"town","location":[23.5878728,52.7365783],"bbox":[23.5478728,52.6965783,23.6278728,52.7765783],"border":[{"name":"Hajnówka","other_names":{"name:pl":"Hajnówka","name:be":"Гайнаўка","name:lt":"Hainuvka","name:ru":"Хайнувка","name:sr":"Хајновка","name:uk":"Хайнувка","name:be-tarask":"Гайнаўка"},"display_name":"Hajnówka, powiat hajnowski, województwo podlaskie, 17-200, Polska","address":{"town":"Hajnówka","county":"powiat hajnowski","state":"województwo podlaskie","ISO3166-2-lvl4":"PL-20","postcode":"17-200","country":"Polska","country_code":"pl"},"population":20141,"osm_type":"relation","osm_id":2793533,"type":"administrative","location":[23.5878728,52.7365783],"bbox":[23.5290244,52.7021604,23.6235921,52.7618158]},{"name":"Hajnówka","display_name":"Hajnówka, powiat hajnowski, województwo podlaskie, 17-200, Polska","address":{"administrative":"Hajnówka","town":"Hajnówka","county":"powiat hajnowski","state":"województwo podlaskie","ISO3166-2-lvl4":"PL-20","postcode":"17-200","country":"Polska","country_code":"pl"},"population":20141,"osm_type":"relation","osm_id":2793534,"type":"administrative","location":[23.571248775449963,52.73175745],"bbox":[23.5290244,52.7021604,23.6235921,52.7618158]}]}
+{"name":"Halinów","other_names":{"name:fr":"Halinów","name:lv":"Halinova","name:nl":"Halinów","name:pl":"Halinów","name:ru":"Халинув","name:sr":"Халинов","name:uk":"Халінув","name:zh":"哈利努夫"},"display_name":"Halinów, gmina Halinów, powiat miński, województwo mazowieckie, 05-074, Polska","address":{"town":"Halinów","municipality":"gmina Halinów","county":"powiat miński","state":"województwo mazowieckie","ISO3166-2-lvl4":"PL-14","postcode":"05-074","country":"Polska","country_code":"pl"},"population":3740,"osm_type":"node","osm_id":457485723,"type":"town","location":[21.3529522,52.2258575],"bbox":[21.3129522,52.1858575,21.3929522,52.2658575],"border":{"name":"Halinów","other_names":{"name:pl":"Halinów","name:fr":"Halinów","name:lv":"Halinova","name:nl":"Halinów","name:ru":"Халинув","name:sr":"Халинов","name:uk":"Халінув","name:zh":"哈利努夫"},"display_name":"Halinów, gmina Halinów, powiat miński, województwo mazowieckie, 05-074, Polska","address":{"town":"Halinów","municipality":"gmina Halinów","county":"powiat miński","state":"województwo mazowieckie","ISO3166-2-lvl4":"PL-14","postcode":"05-074","country":"Polska","country_code":"pl"},"population":3717,"osm_type":"relation","osm_id":2994367,"type":"administrative","location":[21.3529522,52.2258575],"bbox":[21.3386056,52.2149822,21.3751579,52.2355593]}}
+How to use
+Quick inspect with jq (compact each line):
+
+jq -c '.' place-city.ndjson
+Python (streaming, line by line):
+
+import json
+
+def stream_cities(path: str = 'place-city.ndjson', preview: int = 3) -> int:
+    total = 0
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            if not line.strip():
+                continue  # skip empty lines
+            obj = json.loads(line)
+            # Example fields
+            name = obj.get('name')
+            lon, lat = obj.get('location', [None, None])
+            if total < preview:
+                print(f"{name}: lon={lon}, lat={lat}")
+            total += 1
+    print(f"Total records: {total}")
+    return total
+
+if __name__ == '__main__':
+    stream_cities('place-city.ndjson')
+Bulk‑load into databases or pipelines that accept JSON Lines/NDJSON (e.g., import tools for document stores or streaming ETL frameworks).
+Timezone Database (IANA + GeoJSON)
+Geoapify
+Download
+Geoapify’s timezone download bundles canonical IANA tz identifiers, alias mappings, offsets, and timezone boundaries extracted from OpenStreetMap. Use it when you need an offline “timezone by coordinates” lookup or want to display a world timezone map with political boundaries.
+
+File / Archive	Format	Description
+timezone-info.json	JSON	One record per timezone with ISO country coverage, offsets, abbreviations, DST flags, and canonical links.
+timezone-geojson.zip	GeoJSON (per zone)	Polygon/MultiPolygon geometries dissolved per timezone with a tzid property for point-in-polygon checks.
+Sample metadata entry:
+
+
+{
+  "tzIdentifier": "Europe/Berlin",
+  "countryCodes": ["DE"],
+  "type": "canonical",
+  "utcOffsetStandard": "+01:00",
+  "utcOffsetDst": "+02:00",
+  "abbreviationStandard": "CET",
+  "abbreviationDst": "CEST",
+  "dstObserved": true,
+  "lastUpdated": "2024-03-28"
+}
+Working with the dataset
+Load timezone-geojson.zip into GIS tools or PostGIS for spatial joins and map rendering.
+Use timezone-info.json or the NDJSON variant when you just need a timezone list with offsets and abbreviations.
+Combine both files to power offline timezone lookup services without calling an API.
+All downloads inherit upstream licenses: IANA tzdb for identifiers, OpenStreetMap ODbL for boundaries, and CC BY-SA / GFDL for supplemental metadata.
+SDKs and Libraries
+Geoapify Geocoder Autocomplete (JavaScript)
+Geoapify
+npm
+GitHub
+Geoapify Geocoder Autocomplete is downloadable software that provides an embeddable autocomplete UI for address and place search.
+
+Type: Downloadable JavaScript UI control (library)
+Platforms: Browser and Node.js
+Support: Contact us
+Library	Version	License	npm	GitHub
+@geoapify/geocoder-autocomplete	2.2.x	MIT	View on npm	View on GitHub
+Option 1. Install via npm
+npm install @geoapify/geocoder-autocomplete
+Use npm when your project uses a modern build setup (Vite, Webpack, Next.js, etc.). This approach keeps assets versioned with your app, enables tree‑shaking, and makes updates predictable.
+
+Pin a version for stability, for example: npm i @geoapify/geocoder-autocomplete@^2.2.
+Import the library and a theme stylesheet in your codebase.
+Example (ESM):
+
+
+import { GeocoderAutocomplete } from '@geoapify/geocoder-autocomplete';
+import '@geoapify/geocoder-autocomplete/styles/minimal.css';
+Option 2. Download to your project
+Use this option when you don’t have a build step (CMS sites like WordPress/Joomla, plain HTML, or quick prototypes). You can either reference the files from a CDN (UNPKG) or download and self‑host them.
+
+Prefer pinning to a major or exact version to avoid breaking changes: @2 or @2.2.3 instead of @latest.
+Always include a stylesheet (choose a theme such as minimal.css, round-borders.css, etc.).
+For maximum control, download the JS/CSS files and serve them from your own domain.
+Download JS (index.min.js)Download CSS (minimal.css)
+You can also reference the files directly from UNPKG (replace latest with a pinned version for production):
+
+JS (pinned major): https://unpkg.com/@geoapify/geocoder-autocomplete@2/dist/index.min.js
+CSS (pinned major): https://unpkg.com/@geoapify/geocoder-autocomplete@2/styles/minimal.css
+
+<html>
+  <head>
+    <script src="https://unpkg.com/@geoapify/geocoder-autocomplete@2/dist/index.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@2/styles/minimal.css">
+    ...
+  </head>
+  ...
+</html>
+Geoapify Route Planner SDK (JavaScript)
+Geoapify
+npm
+GitHub
+JavaScript SDK for building and optimizing routes with the Geoapify Route Planner service (shipments, vehicles, constraints, solutions).
+
+Type: Downloadable JavaScript software development kit (SDK)
+Platforms: Node.js and Browser
+Support: Contact us
+Library	Version	License	npm	GitHub
+@geoapify/route-planner-sdk	1.7.x	MIT	View on npm	View on GitHub
+Option 1. Install via npm
+npm install @geoapify/route-planner-sdk
+Use npm for modern build setups (Vite, Webpack, Next.js, etc.). This keeps the SDK versioned with your app and enables tree‑shaking.
+
+Pin versions for predictability, for example: npm i @geoapify/route-planner-sdk@^1.
+Import the SDK and, for UI timelines, include a theme stylesheet (e.g., timeline-minimal.css).
+Example (ESM):
+
+
+import * as RoutePlanner from '@geoapify/route-planner-sdk';
+import '@geoapify/route-planner-sdk/styles/timeline-minimal.css';
+
+// Example usage:
+// const client = new RoutePlanner.Client({ apiKey: process.env.GEOAPIFY_KEY });
+// const result = await client.createJob({ /* shipments, vehicles, options */ });
+Option 2. Download to your project
+Use this option when you don’t have a build step (CMS sites, plain HTML). Reference files from a CDN or download and self‑host them. Prefer pinned versions in production.
+
+Download JS (index.min.js)Download CSS (timeline-minimal.css)
+Direct UNPKG references (pinned major):
+
+JS: https://unpkg.com/@geoapify/route-planner-sdk@1/dist/index.min.js
+CSS: https://unpkg.com/@geoapify/route-planner-sdk@1/styles/timeline-minimal.css
+
+<html>
+  <head>
+    <script src="https://unpkg.com/@geoapify/route-planner-sdk@1/dist/index.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/route-planner-sdk@1/styles/timeline-minimal.css">
+    ...
+  </head>
+  ...
+</html>
+Other Libraries
+Library	Version	License	npm	GitHub
+@geoapify/request-rate-limiter	1.0.x	MIT	View on npm	View on GitHub
+@geoapify/un-locode	1.0.x	MIT	View on npm	View on GitHub
+@geoapify/angular-geocoder-autocomplete	2.2.x	MIT	View on npm	View on GitHub
+@geoapify/react-geocoder-autocomplete	2.2.x	MIT	View on npm	View on GitHub
+@geoapify/leaflet-address-search-plugin	1.0.x	MIT	View on npm	View on GitHub
+@geoapify/route-directions	1.0.x	MIT	View on npm	View on GitHub
+Read More About Datasets
+Explore the full dataset pages for details, FAQs, formats, and usage examples.
+
+
+A traditional letter mailbox designed in the style of the United Kingdom, suitable for collecting postal mail.
+Download Postal Codes By Country
+Access accurate postal codes from open data sources with ease. Download the postal code data you need for your projects, spanning various countries.
+
+Geodata and map for Paris, France
+All the Cities, Towns, Villages, and Hamlets Data Worldwide
+Explore a comprehensive dataset of cities, towns, villages, and hamlets worldwide, sourced from OpenStreetMap.
+
+World timezone map with geographic boundaries
+Timezone Dataset: IANA-Based Timezone Metadata and GeoJSON Boundaries
+Download timezone JSON and GeoJSON files and use them in web apps, BI dashboards, GIS tools, or spatial databases.
+FAQ
+Can I download data from the catalog for free?
+Yes, our dataset pages provide free downloads. See the Postcodes and OSM Localities sections above for direct links.
+
+Are the data sets in the catalog open source as well?
+Datasets aggregate open data from different sources. Licenses vary by country/source (e.g., ODbL for OpenStreetMap, CC BY 4.0 for Geonorge). Always check the listed license in the table before use.
+
+What files come with the Timezone database download?
+You get timezone-info.json (metadata for every IANA timezone, including aliases, offsets, and country coverage), timezone-geojson.zip (polygon geometry per canonical timezone), and an NDJSON variant for streaming workflows.
+
+How do I map a coordinate to a timezone using your dataset?
+Load the per-timezone GeoJSON files into a spatial database (PostGIS, BigQuery GIS, etc.) or libraries such as Turf.js, then run point-in-polygon checks. For lightweight apps, fall back to the Geoapify Reverse Geocoding API, which returns the timezone alongside address data.
+
+How often is the timezone dataset updated?
+We track IANA tzdb releases and rerun the boundary builder when new changes land. If you have strict compliance needs, subscribe to update notifications on the Timezone dataset page or re-download when a new IANA release ships.
+
+Can I contribute my own open data sets to the catalog?
+We welcome contributions and partnerships. Contact us and we’ll review source, license, and coverage for inclusion.
+
+Can I use the data in commercial projects?
+Often yes, subject to the original license (for example, ODbL requires attribution to OpenStreetMap contributors and share‑alike for adapted databases). Review the license column and source terms for your target country.
+
+How do I attribute OpenStreetMap data correctly?
+Use “© OpenStreetMap contributors” and link to https://www.openstreetmap.org/copyright. For ODbL terms, see http://opendatacommons.org/licenses/odbl/summary/.
+
+How often are the datasets updated?
+Cadence varies by source and country. Localities change infrequently; postcode updates depend on the national provider. If you need a refresh cycle for your project, contact us.
+
+What file format do you provide? What is NDJSON?
+Downloads are NDJSON (newline‑delimited JSON) for efficient streaming and bulk import. Each line is a standalone JSON object (feature). Many tools (Node.js, Python, jq) can process NDJSON.
+
+How do I read large NDJSON files?
+Stream line‑by‑line. See the examples above (Node.js and Python) and use readers like Node’s "readline" or Python’s standard I/O to avoid loading the whole file into memory.
+
+Which Geoapify SDKs and libraries are available?
+We publish JavaScript UI controls and libraries (e.g., Geocoder Autocomplete, Route Planner SDK, Route Directions) and wrappers for Angular and React. See the SDKs and Libraries sections for npm links and examples.
+
+How do I install the libraries via npm?
+Run "npm install 〈package〉" (for example, "npm i @geoapify/geocoder-autocomplete"). Import the library and any required CSS. See the install snippets under each library.
+
+Can I use the libraries without a build step?
+Yes. Use the UMD build via a 〈script〉 tag and include the CSS from a CDN (UNPKG) or self‑host the files. See the “Download to your project” sections for ready‑to‑use links.
+
+What license do the SDKs and libraries use?
+Unless noted otherwise, Geoapify SDKs/libraries are released under the MIT license. See each npm package page for confirmation.
+
+Which environments are supported (browser/Node/Angular/React)?
+Most libraries support modern browsers (ES2019+) and/or Node.js. Angular and React wrappers are available where noted. Check the per‑library section for specifics.
+
+Should I pin versions?
+Yes. For stability, pin major or exact versions (e.g., "@^2" or "@2.2.3") and prefer pinned CDN URLs (e.g., "@2" instead of "@latest").
+
+Do you provide release notes or changelogs?
+See GitHub Releases and the npm package pages for version history and release notes where available.
+
+How can I verify download integrity?
+Compute a checksum locally (e.g., "shasum -a 256 〈file〉") and compare to your expected value. If you need published checksums for a specific artifact, contact us.
+
+Where can I report issues or request features?
+Open an issue on the corresponding GitHub repository or contact us via the site’s contact form.

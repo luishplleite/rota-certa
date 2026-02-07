@@ -1,0 +1,180 @@
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
+
+CREATE TABLE public.accounts (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name character varying NOT NULL,
+  email character varying NOT NULL UNIQUE,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  earning_per_delivery numeric DEFAULT 2.80,
+  sunday_bonus_threshold integer DEFAULT 50,
+  sunday_bonus_value numeric DEFAULT 100.00,
+  stripe_customer_id character varying,
+  CONSTRAINT accounts_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.admins (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  email character varying NOT NULL UNIQUE,
+  password_hash character varying NOT NULL,
+  name character varying NOT NULL,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT admins_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.earnings_history (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  itinerary_id uuid,
+  date date NOT NULL,
+  deliveries_count integer DEFAULT 0,
+  base_earnings numeric DEFAULT 0,
+  bonus_earnings numeric DEFAULT 0,
+  total_earnings numeric DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT earnings_history_pkey PRIMARY KEY (id),
+  CONSTRAINT earnings_history_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id),
+  CONSTRAINT earnings_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT earnings_history_itinerary_id_fkey FOREIGN KEY (itinerary_id) REFERENCES public.itineraries(id)
+);
+CREATE TABLE public.expenses (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  category character varying NOT NULL CHECK (category::text = ANY (ARRAY['fuel'::character varying, 'food'::character varying, 'maintenance'::character varying, 'other'::character varying]::text[])),
+  amount numeric NOT NULL,
+  description text,
+  date date NOT NULL DEFAULT CURRENT_DATE,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT expenses_pkey PRIMARY KEY (id),
+  CONSTRAINT expenses_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id),
+  CONSTRAINT expenses_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.financial_cycles (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  cycle_start date NOT NULL,
+  cycle_end date NOT NULL,
+  deliveries_count integer DEFAULT 0,
+  base_earnings numeric DEFAULT 0,
+  bonus_earnings numeric DEFAULT 0,
+  other_incomes numeric DEFAULT 0,
+  total_earnings numeric DEFAULT 0,
+  total_expenses numeric DEFAULT 0,
+  net_profit numeric DEFAULT 0,
+  status character varying DEFAULT 'pending'::character varying CHECK (status::text = ANY (ARRAY['active'::character varying, 'pending'::character varying, 'paid'::character varying]::text[])),
+  paid_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT financial_cycles_pkey PRIMARY KEY (id),
+  CONSTRAINT financial_cycles_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id),
+  CONSTRAINT financial_cycles_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.incomes (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  category character varying NOT NULL CHECK (category::text = ANY (ARRAY['tip'::character varying, 'bonus'::character varying, 'extra_delivery'::character varying, 'other'::character varying]::text[])),
+  amount numeric NOT NULL,
+  description text,
+  date date NOT NULL DEFAULT CURRENT_DATE,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT incomes_pkey PRIMARY KEY (id),
+  CONSTRAINT incomes_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id),
+  CONSTRAINT incomes_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.itineraries (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  date date NOT NULL,
+  name character varying NOT NULL,
+  status character varying DEFAULT 'active'::character varying CHECK (status::text = ANY (ARRAY['active'::character varying, 'completed'::character varying, 'cancelled'::character varying]::text[])),
+  total_earnings numeric DEFAULT 0,
+  total_distance_km numeric DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT itineraries_pkey PRIMARY KEY (id),
+  CONSTRAINT itineraries_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id),
+  CONSTRAINT itineraries_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.payments (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  stripe_payment_intent_id character varying UNIQUE,
+  amount numeric NOT NULL,
+  currency character varying DEFAULT 'brl'::character varying,
+  status character varying DEFAULT 'pending'::character varying CHECK (status::text = ANY (ARRAY['pending'::character varying, 'requires_action'::character varying, 'succeeded'::character varying, 'failed'::character varying, 'expired'::character varying]::text[])),
+  pix_qr_code text,
+  pix_code text,
+  expires_at timestamp with time zone,
+  paid_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT payments_pkey PRIMARY KEY (id),
+  CONSTRAINT payments_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id)
+);
+CREATE TABLE public.sessions (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  user_id uuid NOT NULL,
+  token character varying NOT NULL UNIQUE,
+  expires_at timestamp with time zone NOT NULL,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT sessions_pkey PRIMARY KEY (id),
+  CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.stop_counter (
+  account_id uuid NOT NULL,
+  counter integer DEFAULT 0,
+  CONSTRAINT stop_counter_pkey PRIMARY KEY (account_id),
+  CONSTRAINT stop_counter_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id)
+);
+CREATE TABLE public.stops (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  itinerary_id uuid NOT NULL,
+  account_id uuid NOT NULL,
+  fixed_identifier character varying NOT NULL,
+  address_full text NOT NULL,
+  latitude double precision NOT NULL,
+  longitude double precision NOT NULL,
+  sequence_order integer NOT NULL,
+  status character varying DEFAULT 'pending'::character varying CHECK (status::text = ANY (ARRAY['pending'::character varying, 'current'::character varying, 'delivered'::character varying, 'failed'::character varying]::text[])),
+  delivery_time timestamp with time zone,
+  notes text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  package_count integer DEFAULT 1,
+  CONSTRAINT stops_pkey PRIMARY KEY (id),
+  CONSTRAINT stops_itinerary_id_fkey FOREIGN KEY (itinerary_id) REFERENCES public.itineraries(id),
+  CONSTRAINT stops_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id)
+);
+CREATE TABLE public.subscriptions (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL UNIQUE,
+  plan character varying DEFAULT 'trial'::character varying CHECK (plan::text = ANY (ARRAY['trial'::character varying, 'basic'::character varying, 'premium'::character varying, 'enterprise'::character varying]::text[])),
+  status character varying DEFAULT 'active'::character varying CHECK (status::text = ANY (ARRAY['active'::character varying, 'expired'::character varying, 'cancelled'::character varying, 'suspended'::character varying]::text[])),
+  trial_start_date timestamp with time zone DEFAULT now(),
+  trial_end_date timestamp with time zone DEFAULT (now() + '16 days'::interval),
+  paid_start_date timestamp with time zone,
+  paid_end_date timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT subscriptions_pkey PRIMARY KEY (id),
+  CONSTRAINT subscriptions_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id)
+);
+CREATE TABLE public.users (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  account_id uuid NOT NULL,
+  email character varying NOT NULL,
+  password_hash character varying NOT NULL,
+  name character varying NOT NULL,
+  role character varying DEFAULT 'user'::character varying CHECK (role::text = ANY (ARRAY['admin'::character varying, 'user'::character varying, 'driver'::character varying]::text[])),
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT users_pkey PRIMARY KEY (id),
+  CONSTRAINT users_account_id_fkey FOREIGN KEY (account_id) REFERENCES public.accounts(id)
+);

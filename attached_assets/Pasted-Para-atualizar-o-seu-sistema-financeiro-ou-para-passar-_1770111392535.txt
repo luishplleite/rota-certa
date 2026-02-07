@@ -1,0 +1,43 @@
+Para atualizar o seu sistema financeiro (ou para passar o comando para o seu software de gestão/planilha), o ideal é que o prompt seja estruturado de forma que o sistema entenda as regras de negócio do transporte autônomo, já que os descontos não são lineares sobre o total.
+
+Aqui está um prompt otimizado para você usar ou adaptar:
+
+Prompt para Atualização do Sistema Financeiro
+
+"Atue como um analista financeiro e configure as regras de lançamento para pagamentos de frete no modal TAC (Transportador Autônomo de Cargas) via RPA. Utilize os seguintes parâmetros de desconto baseados no faturamento bruto:
+
+ * Regra de INSS: Aplicar alíquota de 11% sobre a base de cálculo previdenciária, que corresponde a 20% do valor bruto do frete (Equivalente a um desconto real de 2,2% sobre o total).
+
+ * Regra de SEST/SENAT: Aplicar alíquota de 2,5% sobre a base de cálculo de 20% do valor bruto do frete (Equivalente a um desconto real de 0,5% sobre o total).
+
+ * Lançamento de Bônus: O campo 'Bônus' deve ser somado ao valor líquido após os descontos tributários, sem incidência de INSS/SEST/SENAT sobre ele.
+
+ * Verificação de IRRF: Caso a base de cálculo de IRRF (correspondente a 10% do valor bruto do frete) ultrapasse o limite de isenção mensal da Receita Federal, aplicar a tabela progressiva vigente.
+
+Dados para teste de validação:
+
+ * Valor Frete Bruto: R$ 3.250,00
+
+ * Bônus: R$ 450,00
+
+ * Resultado esperado: INSS (R$ 71,50), SEST/SENAT (R$ 16,25), Valor Líquido (R$ 3.612,25)."
+
+Por que usar essas porcentagens no seu sistema?
+
+Como você é programador, pode ser útil visualizar a lógica de cálculo que deve estar no seu código ou banco de dados para que os descontos batam sempre com o que a transportadora envia:
+
+| Variável | Lógica de Cálculo (Pseudo-código) |
+
+|---|---|
+
+| Base de Cálculo | base = valor_frete * 0.20 |
+
+| Desconto INSS | inss = base * 0.11 |
+
+| Desconto SEST/SENAT | sest_senat = base * 0.025 |
+
+| Valor Líquido | liquido = (valor_frete - inss - sest_senat) + bonus Ete bobun se refere aos bonificações do domimingo dos 100 reais
+
+
+
+ganhos manuais adicionado manualmete no sisema e despesas nao entra neste calculo

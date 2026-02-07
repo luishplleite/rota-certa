@@ -1,0 +1,19 @@
+Data: 2026-01-26
+Ação: Criação de instalador completo para VPS Debian.
+Procedimento:
+1. Desenvolvido script `instalador.sh` exaustivo que:
+   - Atualiza o sistema Debian.
+   - Instala Docker, Docker Compose, Nginx e Certbot.
+   - Clona o repositório GitHub em `/opt/optirota`.
+   - Solicita interativamente as credenciais Supabase e Mapbox.
+   - Configura o ambiente (.env) e orquestração Docker.
+   - Define o proxy reverso no Nginx e automatiza o SSL com Let's Encrypt.
+Status: Concluído e pronto para uso em VPS externa.
+
+Data: 2026-01-26
+Ação: Correção de Token Mapbox (Espaços em Branco).
+Procedimento:
+1. Identificado que o erro de token inválido persistia mesmo com o token correto devido a possíveis espaços em branco ou caracteres invisíveis.
+2. Adicionado o método `.trim()` no `RouteMap.tsx` para limpar o token antes de passar para o Mapbox GL JS.
+3. Mantido o fallback do token direto no código para máxima confiabilidade.
+Status: Corrigido.

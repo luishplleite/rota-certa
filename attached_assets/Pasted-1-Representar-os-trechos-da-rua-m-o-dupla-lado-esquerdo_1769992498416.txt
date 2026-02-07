@@ -1,0 +1,101 @@
+1. Representar os trechos da rua (mão dupla, lado esquerdo/direito)
+Você precisa representar cada faixa/lado de rua como uma geometria separada (ex.: Polyline ou MultiPolyline), possivelmente vinda de um GeoJSON da via (OSM, etc.).
+
+Use L.polyline(latlngs, options) para desenhar cada trecho de rua.
+
+Use propriedades (ex.: feature.properties.modo = 'carro' ou 'pe') para marcar o modo preferencial (carro ou a pé) daquele segmento.
+
+Use estilos diferentes (cor/linha tracejada) para visualmente diferenciar “carro” x “a pé”.
+
+Exemplo básico de criação:
+
+js
+// rua mão dupla: dois polylines, um pra cada lado/sentido
+var ruaLadoEsq = L.polyline(coordsEsq, { color: 'blue' }).addTo(map);   // carro
+var ruaLadoDir = L.polyline(coordsDir, { color: 'green' }).addTo(map); // a pé
+
+// guardar metadados no próprio layer
+ruaLadoEsq.modo = 'carro';
+ruaLadoDir.modo = 'pe';
+L.polyline é um Path vetorial e suporta eventos de clique, mouseover etc., o que permite o usuário selecionar/editar a ordem de atendimento.
+
+2. Misturar trechos de carro e de a pé (circuitos de ~50 m)
+Sua lógica de otimização vai trabalhar em cima de segmentos e distâncias:
+
+Para medir distância de cada segmento, use map.distance(latlng1, latlng2) ou calcule a soma das distâncias entre vértices do Polyline.
+
+Você pode discretizar a rua em pedaços de ~50 m:
+
+Percorre a polyline em coordenadas,
+
+acumula distância até 50 m,
+
+quebra em um novo segmento (um objeto JS seu, com referência visual para um polyline no Leaflet).
+
+Exemplo de uso da distância:
+
+js
+var d = map.distance([lat1, lng1], [lat2, lng2]); // metros
+Map expõe um método distance(latlng1, latlng2) entre as conversion methods para calcular a distância segundo o CRS, retornando em metros por padrão.
+
+Com isso você estrutura um grafo onde cada nó/segmento tem:
+
+Coordenadas (lista de LatLng).
+
+Comprimento.
+
+Atributo modo (carro/pe).
+
+Ordem preferida (sequência da otimização).
+
+Leaflet só cuida do desenho; a regra “a cada 50 m alternar carro/pe” é sua e roda fora.
+
+3. Fazer o usuário “passar” pelas duas margens sem ficar indo e voltando errado
+Para evitar “vai e volta” na mesma rua, a sua lógica de rota deve:
+
+Conhecer a mão de direção de cada lado (vindo de dados externos, ex.: OSM, que te dizem se a via é oneway).
+​
+
+Tratar cada lado de mão-dupla como duas arestas direcionadas no grafo (uma para cada sentido).
+
+Penalizar ou proibir transições que façam o veículo voltar desnecessariamente pelo mesmo lado.
+
+No Leaflet você apenas:
+
+Desenha a rota final com L.polyline(rotasCarro, ...) e outra com L.polyline(rotasPe, ...).
+
+Pode usar estilos diferentes (ex.: carro = linha grossa azul, a pé = linha fina vermelha).
+
+js
+L.polyline(coordsCarro, { color: 'blue', weight: 5 }).addTo(map);
+L.polyline(coordsPe,    { color: 'red',  weight: 3, dashArray: '5,5' }).addTo(map);
+L.polyline é reutilizado aqui para exibir as sequências que seu otimizador calculou.
+
+4. Interação no mapa para definir a ordem (bairro, lado esquerdo, lado direito)
+Leaflet te dá eventos para o usuário escolher que lado/trecho vem primeiro:
+
+Eventos de interação em Map e Layer: click, dblclick, mousemove, etc.
+
+Você pode escutar cliques em cada polyline para montar a lista de prioridade:
+
+js
+function bindClick(layer) {
+  layer.on('click', function () {
+    // adiciona à lista de visita, na ordem do clique
+    ordemVisita.push(layer.idSegmento);
+    layer.setStyle({ color: 'orange' }); // marcado como escolhido
+  });
+}
+
+bindClick(ruaLadoEsq);
+bindClick(ruaLadoDir);
+A tabela de interaction events na referência de Map e Path/Layer mostra todos esses eventos disponíveis.
+
+5. Onde Leaflet entra x onde entra o motor de otimização
+Parte do problema	Feito com Leaflet	Feito fora do Leaflet (seu backend/algoritmo)
+Mostrar ruas, lados, bairros	L.polyline, L.geoJSON, L.Marker.	Carregar dados (OSM, shapefile, etc.)
+Capturar cliques em ruas/lados/bairros	Eventos click/mouseover em Layer/Map.	Lógica de “estado” (bairro 1, 2, etc.)
+Medir distâncias (para aprox. 50 m)	map.distance(latlng1, latlng2).	Divisão em segmentos, criação de grafo
+Distinguir trechos carro x a pé	Estilo de Polyline, propriedades em layers.	Decidir onde é carro, onde é a pé
+Evitar vai-e-volta na mesma rua	Só visual (exibir rota)	Algoritmo de rota/VRP/TSP híbrido
+Mostrar a rota final (carro + a pé)	L.polyline(coordsSegmento).	Calcular a sequência ótima

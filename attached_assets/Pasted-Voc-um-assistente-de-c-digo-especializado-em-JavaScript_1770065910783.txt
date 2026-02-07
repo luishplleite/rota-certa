@@ -1,0 +1,54 @@
+Você é um assistente de código especializado em JavaScript, HTML, Leaflet.js e integração com sistemas React/Supabase como o OptiRota.
+
+Tenho o sistema OptiRota (documentação completa fornecida abaixo) e quero criar um **MÓDULO ESPECÍFICO** para roteirização avançada de ruas de mão dupla. Este será um componente HTML/JS standalone que pode ser embedado no sistema atual (React + Leaflet).
+
+**CONTEXTO DO OPTIROTA:**
+[COLE AQUI A DOCUMENTAÇÃO COMPLETA DO OPTIROTA QUE VOCÊ FORNECEU]
+
+**OBJETIVO:**
+Criar um único arquivo `index.html` (componente standalone) que funcione como **plataforma de planejamento de rotas por rua**, com foco em:
+- Dividir rua de mão dupla em 2 segmentos (lado esquerdo/direito).
+- Permitir clique para definir ordem de atendimento.
+- Calcular distâncias reais e classificar automaticamente "carro" vs "pé".
+- Otimizar rota e mostrar trajetória.
+- Refinar rota com "inverter" ou "reordenar manual".
+
+**IMPORTANTE:**
+- NÃO é simulação. Deve usar dados **reais** de ruas (GeoJSON ou coordenadas reais).
+- Deve ser **integrável** com o backend OptiRota (endpoint `/api/stops/optimize`).
+- Funcionar **offline-first** (compatível com IndexedDB do OptiRota).
+- Manter estilo **profissional** (Shadcn/UI + Tailwind compatível).
+
+**REQUISITOS TÉCNICOS:**
+
+1. MAPA REAL (não simulação)
+----------------------------
+- Centro em **Santos/SP** (coordenadas reais de ruas locais).
+- Use **OpenStreetMap tiles** (já configurado no OptiRota).
+- Carregue **GeoJSON real** de uma rua específica (exemplo: Av. Ana Costa).
+  - Se não tiver GeoJSON, gere polylines com coordenadas reais de ruas.
+  - Exemplo coordenadas reais (Av. Ana Costa, Santos/SP):
+    ```
+    Lado esquerdo (sentido centro): 
+    [-23.960200, -46.330500], [-23.960800, -46.330200]
+    
+    Lado direito (sentido praia):
+    [-23.960250, -46.330450], [-23.960850, -46.330150]
+    ```
+
+2. SEGMENTOS DE RUA (não simulação)
+-----------------------------------
+- Crie **4 polylines** representando uma rua real:
+  - `ladoEsquerdaIda` (azul, sentido centro)
+  - `ladoEsquerdaVolta` (azul claro, sentido praia)
+  - `ladoDireitaIda` (verde, sentido praia)
+  - `ladoDireitaVolta` (verde claro, sentido centro)
+- Cada polyline deve ter:
+  - `idSegmento` único (ex: 'esq_ida', 'dir_volta')
+  - Comprimento calculado automaticamente com `map.distance()`
+  - `modo` inicial: 'carro' (será otimizado depois)
+
+3. FLUXO DE USO REAL (como entregador OptiRota)
+-----------------------------------------------
+
+o o modulo de roteirizacao avancada  epa para ser integrada direto no projeto do OptiRota.

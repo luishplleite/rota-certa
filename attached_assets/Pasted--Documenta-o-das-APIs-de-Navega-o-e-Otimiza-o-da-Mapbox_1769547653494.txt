@@ -1,0 +1,79 @@
+# Documentação das APIs de Navegação e Otimização da Mapbox
+
+A Mapbox oferece um conjunto robusto de APIs para lidar com diversas necessidades de geolocalização, com destaque para as funcionalidades de **geração de rotas**, **cálculo de matriz de distância** e **otimização de percursos** [1]. Estas ferramentas são essenciais para aplicações que exigem navegação precisa, logística eficiente e análise de acessibilidade.
+
+## 1. Mapbox Directions API: Geração de Rotas e Percursos
+
+A **Directions API** é a principal ferramenta para calcular a rota mais eficiente entre dois ou mais pontos, fornecendo instruções detalhadas passo a passo. Ela é capaz de considerar condições de tráfego em tempo real e fatores específicos do veículo ou modo de transporte [1].
+
+### Perfis de Roteamento
+
+A API suporta quatro perfis de roteamento principais, cada um otimizado para um modo de transporte específico:
+
+| Perfil | Descrição | Fatores Considerados | Limite de Coordenadas |
+| :--- | :--- | :--- | :--- |
+| `mapbox/driving-traffic` | Roteamento automotivo com base em condições de tráfego atuais e históricas. | Tráfego, incidentes, velocidade. | 25 |
+| `mapbox/driving` | Roteamento automotivo focado na rota mais rápida, preferindo vias de alta velocidade. | Tipo de via, velocidade máxima. | 25 |
+| `mapbox/walking` | Roteamento para pedestres e caminhadas. | Calçadas, trilhas, segurança. | 25 |
+| `mapbox/cycling` | Roteamento para bicicletas. | Ciclovias, evita rodovias. | 25 |
+
+### Funcionalidades Avançadas
+
+Além do cálculo de rota básico, a Directions API oferece recursos para refinar a experiência de navegação:
+
+*   **Rotas Alternativas**: O parâmetro `alternatives` pode ser usado para solicitar até duas rotas significativamente diferentes da rota mais rápida, oferecendo opções ao usuário.
+*   **Anotações Detalhadas**: O parâmetro `annotations` permite a inclusão de metadados ao longo da rota, como **distância**, **duração**, **velocidade** e **congestionamento** (para o perfil `driving-traffic`).
+*   **Roteamento para Veículos Elétricos (EV)**: A API pode calcular rotas para veículos elétricos, incluindo paradas de carregamento ideais e previsões de consumo de bateria, tornando-a crucial para a logística de frotas elétricas.
+*   **Restrições**: O parâmetro `exclude` permite evitar certos tipos de vias, como pedágios (`toll`), balsas (`ferry`) ou autoestradas (`motorway`).
+
+## 2. Mapbox Optimization API: Otimização de Rotas (VRP)
+
+A **Optimization API** é projetada para resolver o **Problema de Roteamento de Veículos (VRP)**, calculando o plano mais eficiente para uma frota de veículos visitar múltiplos locais. É a ferramenta ideal para logística de entrega e coleta, onde a ordem das paradas e as restrições de tempo são críticas [2].
+
+### Versões e Capacidades
+
+A Mapbox oferece duas versões da API, com a v2 em fase Beta introduzindo funcionalidades mais complexas:
+
+| Versão | Status | Foco Principal | Recursos Adicionais (v2 Beta) |
+| :--- | :--- | :--- | :--- |
+| **v1** | Estável | Otimização básica de viagens com múltiplas paradas. | N/A |
+| **v2** | Beta | Solução de VRP complexos. | **Janelas de Tempo**, **Capacidade de Veículos**, **Turnos de Motoristas**, **Coleta e Entrega (Shipments)**. |
+
+O fluxo de trabalho para a v2 envolve o envio de um documento JSON detalhado (`POST`), o monitoramento do status do processamento e, finalmente, a recuperação da solução otimizada (`GET`).
+
+### Componentes do Problema de Roteamento
+
+O documento de entrada para a Optimization API v2 é estruturado em torno de cinco componentes principais, que definem o cenário logístico:
+
+1.  **Locations**: Pontos geográficos (coordenadas) que precisam ser visitados.
+2.  **Vehicles**: Descrição da frota, incluindo capacidade, horário de trabalho e localização inicial/final.
+3.  **Services**: Tarefas simples de visita em um único local (ex: uma entrega ou coleta).
+4.  **Shipments**: Tarefas que envolvem a coleta em um local e a entrega em outro, gerenciando o inventário do veículo.
+5.  **Options**: Configurações globais e restrições adicionais para o cálculo.
+
+## 3. Mapbox Matrix API: Matriz de Distância e Duração
+
+A **Matrix API** é uma ferramenta de análise que calcula de forma eficiente os tempos de viagem e as distâncias entre *todos* os pares de pontos em um conjunto de coordenadas. Diferentemente da Directions API, ela não retorna a geometria da rota, mas sim uma matriz de valores, sendo fundamental para o pré-processamento de dados em problemas de otimização e análise de acessibilidade [3].
+
+### Tipos de Matriz
+
+A API pode gerar matrizes simétricas ou assimétricas, dependendo dos parâmetros `sources` (origens) e `destinations` (destinos):
+
+*   **Matriz Simétrica (N x N)**: Todas as coordenadas fornecidas são usadas tanto como origens quanto como destinos.
+*   **Matriz Assimétrica (M x N)**: Permite especificar um subconjunto de coordenadas como origens e outro como destinos, otimizando o cálculo para cenários de "muitos-para-muitos" ou "um-para-muitos".
+
+### Perfis e Parâmetros
+
+Os perfis de roteamento são os mesmos da Directions API (`driving`, `walking`, `cycling`, `driving-traffic`). Um parâmetro notável é o `depart_at`, que permite calcular a matriz com base em condições de tráfego futuras, essencial para planejamento logístico com antecedência.
+
+## Conclusão
+
+As APIs de navegação da Mapbox formam um ecossistema completo para a gestão de rotas. A **Directions API** foca na navegação ponto a ponto e instruções detalhadas. A **Optimization API** resolve problemas logísticos complexos de múltiplos pontos e frotas. Por fim, a **Matrix API** fornece os dados de tempo e distância necessários para alimentar algoritmos de otimização e análises de rede de transporte.
+
+***
+
+## Referências
+
+[1] [Directions API | API Docs | Mapbox](https://docs.mapbox.com/api/navigation/directions/)
+[2] [Optimization API v2 | API Docs | Mapbox](https://docs.mapbox.com/api/navigation/optimization/)
+[3] [Matrix API | API Docs | Mapbox](https://docs.mapbox.com/api/navigation/matrix/)

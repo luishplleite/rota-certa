@@ -1,0 +1,71 @@
+Dá sim para focar em uma cidade/região específica, mas você precisa transformar essa “cidade” em uma **área (bounding box) e conjunto de zooms** e baixar os tiles dessa área. [stackoverflow](https://stackoverflow.com/questions/43608919/html-offline-map-with-local-tiles-via-leaflet)
+
+### Conceito: escolher a área da cidade
+
+Você sempre trabalha com:
+- Um retângulo geográfico: `L.LatLngBounds([sul, oeste], [norte, leste])`.
+- Um intervalo de zoom: por exemplo, `z = 12–18`.
+
+Exemplo (coordenadas fictícias para uma cidade):
+
+```js
+// limites aproximados da cidade
+var cityBounds = L.latLngBounds(
+  L.latLng(-23.99, -46.40), // sudoeste
+  L.latLng(-23.85, -46.25)  // nordeste
+);
+
+// zooms que você quer guardar offline
+var minZoom = 13;
+var maxZoom = 18;
+```
+
+Com esse `cityBounds` + `minZoom`/`maxZoom` você define **exatamente** qual pedaço de mapa será salvo. [stackoverflow](https://stackoverflow.com/questions/71837619/leafletjs-offline-support)
+
+***
+
+### Estratégia 1 – Baixar tiles da cidade antes (PC/servidor)
+
+1. Definir bounding box da cidade (como acima).  
+2. Usar uma ferramenta (Mobile Atlas Creator, tile downloader, seu próprio script) para gerar tiles `{z}/{x}/{y}.png` só dentro dessa área e dos zooms desejados. [groups.google](https://groups.google.com/g/leaflet-js/c/SjszTVbdOF8)
+3. Servir esses tiles localmente:
+
+```js
+L.tileLayer('tiles/{z}/{x}/{y}.png', {
+  minZoom: 13,
+  maxZoom: 18,
+  bounds: cityBounds  // opcional, para limitar visualização
+}).addTo(map);
+```
+
+Assim, só aquela cidade e aqueles níveis de zoom existem offline, e o resto do mundo não aparece ou mostra erro de tile. [help.openstreetmap](https://help.openstreetmap.org/questions/46003/leaflet-tiles-offline/)
+
+***
+
+### Estratégia 2 – Usar plugin que “sementeia” (seed) um bounding box
+
+Alguns plugins (por exemplo, **Leaflet.TileLayer.PouchDBCached** ou similares) têm um método de **seed** que recebe um `LatLngBounds` + zooms e baixa todos os tiles daquela área para cache local (PouchDB/IndexedDB). [github](https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached)
+
+Exemplo conceitual:
+
+```js
+// layer com cache
+var cachedLayer = L.tileLayer.pouchDBCached('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  minZoom: 13,
+  maxZoom: 18
+}).addTo(map);
+
+// “sementeia” a área da cidade (baixa tudo dentro do bounds + zooms)
+cachedLayer.seed(cityBounds, 13, 18);
+```
+
+Depois disso, quando você estiver offline, os tiles daquela cidade já estão no cache e serão exibidos normalmente. [github](https://github.com/MazeMap/Leaflet.TileLayer.PouchDBCached)
+
+***
+
+### Pontos importantes
+
+- “Escolher a cidade” na prática é: você define **coordenadas de limite** da cidade (bounding box) e os **níveis de zoom** que quer baixar.  
+- Tome cuidado com **política de uso dos tiles** (OSM etc. não permite baixar quantidades enormes direto dos servidores públicos; para áreas maiores pode ser necessário seu próprio servidor de tiles ou usar dados OSM brutos). [help.openstreetmap](https://help.openstreetmap.org/questions/43792/can-i-download-osm-tiles-for-offline-use/)
+
+Se você me disser qual cidade específica você quer (por exemplo, “Santos – SP”) e qual zoom aproximado, posso te sugerir um `LatLngBounds` razoável e um snippet pronto para semear/salvar essa área.

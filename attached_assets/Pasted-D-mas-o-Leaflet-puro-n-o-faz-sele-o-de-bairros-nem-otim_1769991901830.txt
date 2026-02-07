@@ -1,0 +1,126 @@
+Dá, mas o Leaflet “puro” não faz seleção de bairros nem otimização de rota sozinho; ele te dá os blocos para você implementar: desenhar áreas, reagir a cliques, obter bounds e daí mandar para um serviço de rota/otimização.
+
+### 1. Selecionar bairros por área no mapa
+
+Para deixar o usuário “circular” uma área (bairro 1, depois bairro 2, etc.) você usa camadas vetoriais e eventos:
+
+- **Polígonos de bairro**: você pode ter um GeoJSON de bairros e carregar com `L.geoJSON()`, cada feature vira um `Polygon` clicável. [leafletjs](https://leafletjs.com/examples/geojson/)
+- **Ferramenta de desenho**: pode usar um plugin (por ex. Leaflet.draw) para o usuário desenhar manualmente o polígono do bairro no mapa.  
+- Em ambos os casos, o Leaflet te dá:
+  - Eventos de clique/mouse (`click`, `mouseover`, etc.) em layers e no mapa.  
+  - Métodos para pegar **bounds** e **centro**: `layer.getBounds()`, `map.getBounds()`, etc., que retornam `LatLngBounds`.
+
+Exemplo conceitual (selecionar bairros carregados de um GeoJSON):
+
+```js
+// carregar bairros de um GeoJSON
+var bairrosLayer = L.geoJSON(geojsonBairros, {
+  onEachFeature: function (feature, layer) {
+    layer.on('click', function () {
+      layer.setStyle({ color: 'red' }); // marca como selecionado
+      bairrosSelecionados.push({
+        id: feature.properties.id,
+        nome: feature.properties.nome,
+        bounds: layer.getBounds()        // limites desse bairro
+      });
+    });
+  }
+}).addTo(map);
+```
+
+Aqui você usa `L.geoJSON` (não aparece inteiro no trecho, mas está na doc oficial) e os **eventos de interação** do objeto Map/Layer para capturar a seleção. [leafletjs](https://leafletjs.com/examples/geojson/)
+
+### 2. Circular/limitar a navegação pela área selecionada
+
+Uma vez que você tem o bairro 1 selecionado, você pode:
+
+- Ajustar a visão para aquele bairro com `map.fitBounds(boundsDoBairro)`.  
+- Opcionalmente impedir que o usuário saia da área com `map.setMaxBounds(boundsDoBairro)`; isso usa a opção `maxBounds` / método `setMaxBounds` do Map.
+
+```js
+// centralizar no bairro
+map.fitBounds(bairro.bounds);
+
+// opcional: restringir a navegação ao bairro selecionado
+map.setMaxBounds(bairro.bounds);
+```
+
+O Map expõe `setMaxBounds(bounds)` e a opção `maxBounds` para restringir a visão a um retângulo geográfico.
+
+### 3. Seleção sequencial (bairro 1, depois 2, etc.)
+
+Você pode controlar a ordem de seleção em JavaScript, por exemplo:
+
+- Primeiro estado: aguardando seleção do **bairro 1**.  
+- Depois de selecionado, muda de estado para aguardar **bairro 2**.  
+- Visualmente você pode mudar a cor/estilo de cada área selecionada.
+
+Exemplo simples de fluxo:
+
+```js
+var passo = 1;
+var selecoes = {};
+
+function handleClickBairro(feature, layer) {
+  layer.on('click', function () {
+    if (passo === 1) {
+      selecoes.bairro1 = layer.getBounds();
+      layer.setStyle({ color: 'green' });
+      passo = 2;
+    } else if (passo === 2) {
+      selecoes.bairro2 = layer.getBounds();
+      layer.setStyle({ color: 'blue' });
+      passo = 3;
+    }
+  });
+}
+```
+
+Esse padrão usa os **eventos de interação** em cada layer, que o Leaflet fornece para qualquer `Path` (polígono, polyline, etc.).
+
+### 4. Otimizar rota entre bairros selecionados
+
+O Leaflet **não calcula rota** nem faz otimização (TSP, VRP, etc.); ele só mostra o resultado em forma de polyline.  
+Para otimizar a rota você normalmente faz:
+
+1. Escolher um ponto representativo de cada bairro (por exemplo, `bounds.getCenter()` ou algum ponto chave).  
+2. Mandar esses pontos para um serviço de roteamento/otimização externo (OSRM, GraphHopper, Valhalla, API de rotas de algum provider).  
+3. Receber a rota como uma linha (GeoJSON LineString, array de coordenadas etc.).  
+4. Desenhar com `L.polyline(coords).addTo(map);`. [wiki.openstreetmap](https://wiki.openstreetmap.org/wiki/Using_OpenStreetMap_offline)
+
+Exemplo conceitual:
+
+```js
+// obter centro dos bairros selecionados
+var p1 = selecoes.bairro1.getCenter();
+var p2 = selecoes.bairro2.getCenter();
+
+// chamar seu backend / serviço de rota, que retorna uma lista de coordenadas
+fetch('/rota-otimizada', {
+  method: 'POST',
+  body: JSON.stringify({ pontos: [p1, p2] }),
+  headers: { 'Content-Type': 'application/json' }
+})
+  .then(r => r.json())
+  .then(data => {
+    // data.coords: [[lat,lng], [lat,lng], ...]
+    L.polyline(data.coords, { color: 'red' }).addTo(map);
+  });
+```
+
+Aqui o Leaflet usa `L.polyline` (definido na API como um `Path` vetorial) para exibir a rota otimizada.
+
+***
+
+### 5. Resumo do que a API do Leaflet te dá para isso
+
+| Objetos/recursos Leaflet | Pra que serve na sua ideia |
+|--------------------------|----------------------------|
+| `L.Map`, eventos `click`, `mousemove`, etc. | Capturar cliques no mapa ou em layers para seleção de área. |
+| `L.geoJSON`, `L.Polygon`, `L.Rectangle` [leafletjs](https://leafletjs.com/examples/geojson/) | Representar bairros/áreas selecionáveis como shapes. |
+| `layer.on('click', ...)` em qualquer `Layer`/`Path` | Detectar seleção de bairro 1, 2, etc. |
+| `layer.getBounds()`, `map.getBounds()` | Saber o retângulo geográfico de cada bairro para salvar/otimizar. |
+| `map.fitBounds(bounds)`, `map.setMaxBounds(bounds)` | Centralizar e restringir a navegação à área escolhida. |
+| `L.polyline(coords)` | Desenhar a rota otimizada no mapa. |
+
+Se quiser, posso te montar um HTML completo (sem backend de rota, só com mock) onde você clica em dois “bairros” (retângulos) e ele desenha uma rota simples entre eles, para você depois plugar o otimizador real.

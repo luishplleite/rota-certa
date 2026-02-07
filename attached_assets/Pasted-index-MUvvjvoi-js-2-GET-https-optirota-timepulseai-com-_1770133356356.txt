@@ -1,0 +1,303 @@
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+(anonymous)	@	index-MUvvjvoi.js:2
+a	@	index-MUvvjvoi.js:2
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+setInterval		
+Rh	@	index-MUvvjvoi.js:2
+Oh	@	index-MUvvjvoi.js:2
+onQueryUpdate	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+batch	@	index-MUvvjvoi.js:2
+Sa	@	index-MUvvjvoi.js:2
+setData	@	index-MUvvjvoi.js:2
+onSuccess	@	index-MUvvjvoi.js:2
+v	@	index-MUvvjvoi.js:2
+Promise.then		
+j	@	index-MUvvjvoi.js:2
+start	@	index-MUvvjvoi.js:2
+fetch	@	index-MUvvjvoi.js:2
+Hl	@	index-MUvvjvoi.js:2
+(anonymous)	@	index-MUvvjvoi.js:2
+
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+index-MUvvjvoi.js:2 
+ GET https://optirota.timepulseai.com.br/api/itinerary 401 (Unauthorized)
+index-MUvvjvoi.js:2 API 401 Unauthorized detected at: /api/itinerary
+﻿
+

@@ -1,0 +1,146 @@
+Você não consegue “salvar o Leaflet” em si offline (ele já é só um arquivo JS/CSS), o desafio é salvar **os dados do mapa** (tiles ou vetores) para poder usar Leaflet sem internet. [leafletjs](https://leafletjs.com)
+
+Vou separar em dois cenários principais e te dar um caminho prático em cada um.
+
+***
+
+## 1. Tiles raster (mapa de fundo) offline
+
+Para usar tiles tipo OSM/Google-like offline você precisa **baixar os tiles antes** e servi-los localmente. [groups.google](https://groups.google.com/g/leaflet-js/c/E3_yvqyjTBg)
+
+Passos gerais:
+
+1. Baixar tiles para uma pasta local  
+   - Use um tile cacher (ex.: osm-tile-cacher) ou uma ferramenta de export de tiles para gerar algo como:  
+     `tiles/{z}/{x}/{y}.png`. [stackoverflow](https://stackoverflow.com/questions/16036880/how-to-make-offline-mapsusing-leaflet-osm-by-caching)
+   - Atenção a licenças/termos de uso dos servidores de tiles e limites de download. [reddit](https://www.reddit.com/r/openstreetmap/comments/15s24d1/downloading_a_tileset_and_storing_it_locally/)
+
+2. Servir esses tiles com um servidor local  
+   - Pode ser um **servidor HTTP simples** (Node, Python, Nginx, etc.) expondo `/tiles/{z}/{x}/{y}.png`.  
+   - No Leaflet:
+
+   ```js
+   var map = L.map('map').setView([lat, lng], 13);
+
+   // tiles locais
+   L.tileLayer('tiles/{z}/{x}/{y}.png', {
+     minZoom: 10,
+     maxZoom: 18,
+     attribution: '© dados OSM etc.'
+   }).addTo(map);
+   ```
+
+   Isso funciona offline porque o browser só precisa acessar o servidor local e o sistema de arquivos.
+
+3. Alternativa: usar MBTiles + plugin  
+   - Gere um arquivo `.mbtiles` (SQLite com tiles).  
+   - Use um plugin como **Leaflet.TileLayer.MBTiles** para ler do arquivo (normalmente com um serverzinho Node/Python que entrega os tiles). [stackoverflow](https://stackoverflow.com/questions/62989519/leaflet-offline-map-how-to-store-a-map-for-offline-usage)
+
+***
+
+## 2. Cache em browser (IndexedDB/localForage/PouchDB)
+
+Se o mapa roda no navegador e você quer que o próprio navegador **baixe e guarde os tiles** para uso offline, a prática comum é:
+
+1. Usar um plugin pronto  
+   - Ex.: **leaflet.offline** ou libs similares que estendem `L.TileLayer`. [github](https://github.com/mWater/offline-leaflet-map/blob/master/README.md)
+   - A ideia desses plugins:
+     - Quando online, fazem o download das imagens de tile.
+     - Salvam em **IndexedDB/WebSQL/localForage**.
+     - Quando offline, leem do banco local e continuam exibindo o mapa. [github](https://github.com/mWater/offline-leaflet-map/blob/master/README.md)
+
+   Exemplo aproximado (baseado em `leaflet.offline` e `ngx.leaflet.offline`): [npmjs](https://www.npmjs.com/package/leaflet.offline)
+
+   ```js
+   // layer que sabe salvar/carregar tiles
+   var offlineLayer = L.tileLayer.offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+     minZoom: 13,
+     maxZoom: 19
+   });
+
+   // controle com botões para salvar/remover tiles
+   var offlineControl = L.control.offline(offlineLayer, tilesDb, {
+     saveButtonHtml: 'S',
+     removeButtonHtml: 'X',
+     confirmSavingCallback: function (nTilesToSave, continueSaveTiles) {
+       if (window.confirm('Salvar ' + nTilesToSave + ' tiles?')) {
+         continueSaveTiles();
+       }
+     },
+     confirmRemovalCallback: function (continueRemoveTiles) {
+       if (window.confirm('Remover todos os tiles salvos?')) {
+         continueRemoveTiles();
+       }
+     }
+   });
+
+   offlineLayer.addTo(map);
+   offlineControl.addTo(map);
+   ```
+
+   Por baixo, esses plugins usam IndexedDB ou WebSQL para armazenar os blobs de imagem. [github](https://github.com/BETOXL/ngx.leaflet.offline)
+
+2. Se quiser fazer “na mão”  
+   - Crie uma `L.TileLayer` customizada que:
+     - No `createTile`, verifica em IndexedDB se o tile já existe, se sim, usa ele.
+     - Se não existir e estiver online, faz fetch, guarda em IndexedDB, e depois mostra. [developer.mozilla](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB)
+   - Normalmente se usa bibliotecas como **localForage, Dexie, PouchDB** para simplificar o IndexedDB. [stackoverflow](https://stackoverflow.com/questions/62989519/leaflet-offline-map-how-to-store-a-map-for-offline-usage)
+
+***
+
+## 3. Dados vetoriais (GeoJSON, markers, etc.) offline
+
+Para camadas vetoriais (pontos, linhas, polígonos):
+
+1. GeoJSON estático local  
+   - Coloque seu `.geojson` junto com o app e carregue via fetch, mesmo offline, desde que o arquivo esteja acessível no servidor local.
+
+   ```js
+   fetch('data/meu_arquivo.geojson')
+     .then(res => res.json())
+     .then(data => {
+       L.geoJSON(data).addTo(map);
+     });
+   ```
+
+   O Leaflet carrega esse GeoJSON normalmente independentemente de conexão, porque o arquivo está local. [bookdown](https://bookdown.org/sammigachuhi/book-leaflet/using-geojson-in-leaflet.html)
+
+2. GeoJSON/markers salvos no navegador  
+   - Quando o usuário cria/edita pontos, serialize para GeoJSON ou outro formato simples e salve em:
+     - **localStorage** (para poucos KB) ou
+     - **IndexedDB** (para mais dados e melhor performance). [blog.openreplay](https://blog.openreplay.com/indexeddb-localstorage-sessionstorage/)
+
+   Exemplo simples com localStorage:
+
+   ```js
+   // salvar
+   localStorage.setItem('meusMarkers', JSON.stringify(geojsonObj));
+
+   // restaurar
+   var saved = localStorage.getItem('meusMarkers');
+   if (saved) {
+     var data = JSON.parse(saved);
+     L.geoJSON(data).addTo(map);
+   }
+   ```
+
+   Para volumes maiores de dados, use IndexedDB com Dexie/PouchDB etc. [blog.openreplay](https://blog.openreplay.com/indexeddb-localstorage-sessionstorage/)
+
+***
+
+## 4. Desenho da solução (resumo prático)
+
+- Se é uma **web app no navegador**:
+  - Tiles: use plugin tipo `leaflet.offline` + IndexedDB, ou sirva tiles locais com um servidor simples. [npmjs](https://www.npmjs.com/package/leaflet.offline)
+  - Dados vetoriais: GeoJSON local + localStorage/IndexedDB para salvar desenhos do usuário. [leafletjs](https://leafletjs.com/examples/geojson/)
+
+- Se é um **app desktop/mobile** (Electron, Cordova, etc.):
+  - Embede um servidor local de tiles ou use plugins específicos para caching em storage nativo (há plugins listados na página de plugins do Leaflet, inclusive para Cordova/Phonegap). [leafletjs](https://leafletjs.com/plugins.html)
+
+***
+
+Se você me disser:  
+- onde esse mapa vai rodar (browser puro, PWA, Cordova, Electron, app desktop)  
+- e se você quer salvar só **fundo raster** ou também **dados vetoriais editáveis**,  
+
+eu posso te devolver um exemplo completo bem focado (HTML+JS básico ou com framework se preferir).

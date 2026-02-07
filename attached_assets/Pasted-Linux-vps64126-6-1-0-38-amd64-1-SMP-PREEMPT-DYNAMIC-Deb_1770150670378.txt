@@ -1,0 +1,51 @@
+Linux vps64126 6.1.0-38-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.147-1 (2025-08-02) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Feb  3 11:21:15 2026 from 201.26.167.23
+root@vps64126:~# cd /opt/optirota
+git pull origin main
+docker compose build --no-cache
+docker compose up -d
+From https://github.com/luishplleite/rota-certa
+ * branch            main       -> FETCH_HEAD
+ + be19bdf...039e097 main       -> origin/main  (forced update)
+hint: You have divergent branches and need to specify how to reconcile them.
+hint: You can do so by running one of the following commands sometime before
+hint: your next pull:
+hint: 
+hint:   git config pull.rebase false  # merge
+hint:   git config pull.rebase true   # rebase
+hint:   git config pull.ff only       # fast-forward only
+hint: 
+hint: You can replace "git config" with "git config --global" to set a default
+hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+hint: or --ff-only on the command line to override the configured default per
+hint: invocation.
+fatal: Need to specify how to reconcile divergent branches.
+[+] Building 1013.7s (14/16)                                                    
+ => [internal] load metadata for docker.io/library/node:20-alpine          1.8s
+ => [internal] load .dockerignore                                          0.0s
+ => => transferring context: 2B                                            0.0s
+ => [internal] load build context                                         59.6s
+ => => transferring context: 311.60MB                                     58.7s
+ => [builder 1/7] FROM docker.io/library/node:20-alpine@sha256:09e2b3d972  0.2s
+ => => resolve docker.io/library/node:20-alpine@sha256:09e2b3d9726018aecf  0.1s
+ => CACHED [builder 2/7] WORKDIR /app                                      0.0s
+ => [builder 3/7] RUN apk add --no-cache python3 make g++ pkgconfig pixm  29.6s
+ => [stage-1 3/6] RUN apk add --no-cache pixman cairo pango jpeg giflib   20.5s
+ => [stage-1 4/6] COPY package*.json ./                                    4.3s
+ => [builder 4/7] COPY package*.json ./                                    3.7s
+ => [stage-1 5/6] RUN npm install --omit=dev                             323.9s
+ => [builder 5/7] RUN npm install                                        341.7s
+ => [builder 6/7] COPY . .                                                 9.5s 
+ => [builder 7/7] RUN npm run build                                      433.1s 
+ => => # building client...                                                     
+ => => # vite v7.3.0 building client environment for production...              
+ => => # transforming...                                                        
+ => => # ✓ 2623 modules transformed.                                            
+

@@ -1,0 +1,227 @@
+# Guia Completo de Integração: GeoServer e Leaflet
+
+**Autor:** Manus AI
+**Data:** 30 de Janeiro de 2026
+**Idioma:** Português Brasileiro
+
+## Introdução
+
+A combinação do **GeoServer** (servidor de dados geoespaciais) com o **Leaflet** (biblioteca JavaScript para mapas interativos) é a espinha dorsal de muitas aplicações de *Web Mapping* robustas e de alto desempenho. O GeoServer atua como o motor de dados, publicando informações geográficas através de padrões abertos do OGC (Open Geospatial Consortium), enquanto o Leaflet atua como o cliente leve e responsivo, exibindo esses dados no navegador do usuário.
+
+Este guia detalha os três principais métodos de integração, fornecendo exemplos de código e melhores práticas para cada um.
+
+## 1. Integração via WMS (Web Map Service)
+
+O WMS é o método mais comum e simples para exibir dados do GeoServer no Leaflet. O GeoServer renderiza a imagem do mapa no lado do servidor e envia um *tile* (mosaico) de imagem (PNG ou JPEG) para o Leaflet.
+
+### Vantagens e Desvantagens
+
+| Vantagem | Desvantagem |
+| :--- | :--- |
+| **Performance** para grandes volumes de dados (o servidor faz o trabalho pesado). | **Sem acesso aos dados vetoriais** (apenas uma imagem). |
+| **Estilização centralizada** (o estilo é definido no GeoServer). | **Interatividade limitada** (não é possível clicar em uma feição para obter atributos diretamente). |
+| **Simplicidade** de implementação no Leaflet. | |
+
+### Código de Exemplo (WMS)
+
+O Leaflet possui uma classe dedicada, `L.tileLayer.wms()`, que simplifica a integração [1].
+
+```javascript
+// 1. Inicialização do Mapa Leaflet
+var map = L.map('map').setView([-15.78, -47.92], 5); // Exemplo: Brasília, Zoom 5
+
+// 2. Adicionar um mapa base (ex: OpenStreetMap)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+// 3. Adicionar a Camada WMS do GeoServer
+var geoserverUrl = 'http://localhost:8080/geoserver/wms'; // Substitua pela sua URL base do GeoServer
+
+var camadaWMS = L.tileLayer.wms(geoserverUrl, {
+    layers: 'workspace_name:layer_name', // Substitua pelo seu workspace e nome da camada
+    format: 'image/png', // Use 'image/png' para transparência
+    transparent: true,
+    version: '1.1.1', // Versão padrão do WMS
+    attribution: 'Dados GeoServer'
+}).addTo(map);
+```
+
+### Obtendo Informações da Feição (GetFeatureInfo)
+
+Como o WMS envia apenas imagens, para obter informações de uma feição ao clicar no mapa, é necessário fazer uma requisição adicional ao GeoServer usando o padrão **GetFeatureInfo**. O Leaflet não tem suporte nativo para isso, mas plugins ou código customizado podem ser usados.
+
+**Melhor Prática:** Use a biblioteca `leaflet-wms-getfeatureinfo` ou implemente uma função que capture o evento de clique (`map.on('click', ...)`), calcule as coordenadas de tela e monte a URL de requisição `GetFeatureInfo` para o GeoServer.
+
+## 2. Integração via WFS (Web Feature Service)
+
+O WFS permite que o Leaflet solicite os dados vetoriais brutos (geometria e atributos) do GeoServer, geralmente no formato **GeoJSON**. Isso permite total controle sobre a estilização e interatividade no lado do cliente.
+
+### Vantagens e Desvantagens
+
+| Vantagem | Desvantagem |
+| :--- | :--- |
+| **Acesso total aos dados** (geometria e atributos). | **Performance** pode ser um problema com grandes volumes de dados (o navegador precisa processar toda a geometria). |
+| **Estilização dinâmica** e interatividade completa no Leaflet. | **Requer configuração** de CORS ou uso de JSONP no GeoServer. |
+| **WFS-T** (Transactional) permite edição de dados. | |
+
+### Código de Exemplo (WFS/GeoJSON com JSONP)
+
+Para contornar problemas de **CORS** (Cross-Origin Resource Sharing) ao fazer requisições AJAX de um domínio diferente do GeoServer, é comum usar o formato **JSONP** [2].
+
+**Passo 1: Habilitar JSONP no GeoServer**
+
+No arquivo `web.xml` do GeoServer (`/webapps/geoserver/WEB-INF/web.xml`), localize e descomente o seguinte bloco:
+
+```xml
+<context-param>
+    <param-name>ENABLE_JSONP</param-name>
+    <param-value>true</param-value>
+</context-param>
+```
+
+**Passo 2: Requisição WFS no Leaflet (usando jQuery para AJAX/JSONP)**
+
+```javascript
+// URL base do WFS do GeoServer
+var wfsUrl = 'http://localhost:8080/geoserver/wfs';
+
+// Função de callback que recebe os dados GeoJSON
+function handleJson(data) {
+    // Adiciona os dados GeoJSON ao mapa
+    var camadaWFS = L.geoJson(data, {
+        style: function (feature) {
+            // Exemplo de estilização baseada em atributo
+            return {
+                color: 'red',
+                weight: 2,
+                fillOpacity: 0.5
+            };
+        },
+        onEachFeature: function (feature, layer) {
+            // Adiciona um popup com informações do atributo
+            layer.bindPopup(`**Nome:** ${feature.properties.nome_do_campo}`);
+        }
+    }).addTo(map);
+
+    // Ajusta o zoom do mapa para a extensão da camada
+    map.fitBounds(camadaWFS.getBounds());
+}
+
+// Requisição AJAX/JSONP para o GeoServer
+$.ajax(wfsUrl, {
+    type: 'GET',
+    data: {
+        service: 'WFS',
+        version: '1.1.0',
+        request: 'GetFeature',
+        typename: 'workspace_name:layer_name', // Substitua
+        srsname: 'EPSG:4326',
+        outputFormat: 'text/javascript', // Formato para JSONP
+        // Opcional: Filtro CQL para buscar apenas dados específicos
+        // CQL_FILTER: "nome_do_campo='valor_desejado'",
+    },
+    dataType: 'jsonp',
+    jsonpCallback: 'handleJson', // Nome da função de callback
+    jsonp: 'format_options'
+});
+```
+
+## 3. Integração via Vector Tiles (MVT)
+
+Vector Tiles (MVT - MapBox Vector Tiles) é a solução moderna e mais eficiente para servir dados vetoriais em larga escala. O GeoServer serve os dados vetoriais pré-processados em pequenos pacotes binários (PBF), e o Leaflet usa um plugin para renderizar e estilizar esses dados no lado do cliente.
+
+### Vantagens e Desvantagens
+
+| Vantagem | Desvantagem |
+| :--- | :--- |
+| **Melhor Performance** (tamanho de arquivo muito menor que GeoJSON). | **Requer plugin** adicional no Leaflet (ex: `Leaflet.VectorGrid`). |
+| **Estilização dinâmica** no cliente. | **Configuração mais complexa** no GeoServer (via GeoWebCache). |
+| **Cache eficiente** (o GeoServer só precisa de um *tile* para todos os estilos). | |
+
+### Código de Exemplo (Vector Tiles com Leaflet.VectorGrid)
+
+Para usar MVT no Leaflet, você precisará do plugin `Leaflet.VectorGrid` [3].
+
+**Passo 1: Configurar GeoServer para MVT**
+
+1.  No GeoServer, vá em **Tile Layers** (GeoWebCache).
+2.  Selecione sua camada e habilite o formato `application/vnd.mapbox-vector-tile`.
+3.  A URL do serviço MVT será algo como: `http://localhost:8080/geoserver/gwc/service/tms/1.0.0/workspace_name:layer_name@EPSG:900913@pbf/{z}/{x}/{y}.pbf`
+
+**Passo 2: Código Leaflet com Leaflet.VectorGrid**
+
+Inclua o plugin `Leaflet.VectorGrid` no seu HTML:
+
+```html
+<script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundle.js"></script>
+```
+
+Em seguida, use o código JavaScript:
+
+```javascript
+// URL do serviço MVT (MapBox Vector Tiles)
+var mvtUrl = 'http://localhost:8080/geoserver/gwc/service/tms/1.0.0/workspace_name:layer_name@EPSG:900913@pbf/{z}/{x}/{y}.pbf';
+
+// Estilo para a camada MVT
+var estiloMVT = {
+    // O nome da camada dentro do tile MVT é geralmente o nome da camada do GeoServer
+    'layer_name': { 
+        fill: true,
+        weight: 1,
+        fillColor: '#0078A8',
+        color: '#005580',
+        fillOpacity: 0.6,
+        opacity: 1,
+        // Função para obter informações ao clicar (GetFeatureInfo)
+        getFeatureId: function(feature) {
+            return feature.properties.id_unico; // Use um ID único da feição
+        }
+    }
+};
+
+// Criação da camada VectorGrid
+var camadaMVT = L.vectorGrid.protobuf(mvtUrl, {
+    rendererFactory: L.canvas.tile, // Renderização via Canvas
+    vectorTileLayerStyles: estiloMVT,
+    interactive: true, // Habilita a interatividade (clique)
+    get
+}).addTo(map);
+
+// Adicionar interatividade (ex: popup ao clicar)
+camadaMVT.on('click', function (e) {
+    if (e.layer.properties) {
+        L.popup()
+            .setContent(`**ID:** ${e.layer.properties.id_unico}<br>**Nome:** ${e.layer.properties.nome_do_campo}`)
+            .setLatLng(e.latlng)
+            .openOn(map);
+    }
+});
+```
+
+## 4. Melhores Práticas e Solução de Problemas
+
+### CORS (Cross-Origin Resource Sharing)
+
+O problema mais comum na integração é o CORS. Se o seu GeoServer e sua aplicação Leaflet estiverem em domínios diferentes, o navegador bloqueará as requisições WFS e MVT.
+
+**Soluções:**
+
+1.  **JSONP (para WFS):** Conforme detalhado na Seção 2, habilite o JSONP no `web.xml` do GeoServer.
+2.  **Configuração de CORS no GeoServer:** Para WFS e MVT, a solução mais robusta é configurar o CORS no próprio GeoServer. No arquivo `web.xml`, você deve descomentar e configurar o filtro CORS, especificando os domínios permitidos (`Access-Control-Allow-Origin`).
+3.  **Proxy:** Use um *proxy* no lado do servidor da sua aplicação Leaflet para encaminhar as requisições ao GeoServer, contornando a restrição de *cross-origin* do navegador.
+
+### Escolha do Método
+
+| Cenário | Método Recomendado |
+| :--- | :--- |
+| Visualização de **dados estáticos** ou **muito grandes** onde a interatividade não é crucial. | **WMS** |
+| Visualização de **dados dinâmicos** em **larga escala** com necessidade de interatividade e estilização no cliente. | **Vector Tiles (MVT)** |
+| Visualização de **dados pequenos** ou **médios** com necessidade de **edição** (WFS-T) ou acesso total aos atributos. | **WFS (GeoJSON)** |
+
+## Referências
+
+[1] Leaflet.js. *Using WMS and TMS services*. Disponível em: [https://leafletjs.com/examples/wms/wms.html](https://leafletjs.com/examples/wms/wms.html)
+[2] Kshetri, T. (2021). *WFS request in Geoserver using Leafletjs*. DEV Community. Disponível em: [https://dev.to/iamtekson/wfs-request-in-geoserver-using-leafletjs-552g](https://dev.to/iamtekson/wfs-request-in-geoserver-using-leafletjs-552g)
+[3] Leaflet. *Leaflet.VectorGrid*. Disponível em: [https://github.com/Leaflet/Leaflet.VectorGrid](https://github.com/Leaflet/Leaflet.VectorGrid)
+[4] GeoServer. *Vector tiles tutorial*. Disponível em: [https://docs.geoserver.org/main/en/user/extensions/vectortiles/tutorial.html](https://docs.geoserver.org/main/en/user/extensions/vectortiles/tutorial.html)

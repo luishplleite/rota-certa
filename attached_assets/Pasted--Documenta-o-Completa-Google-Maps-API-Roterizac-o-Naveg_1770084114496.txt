@@ -1,0 +1,1049 @@
+# Documentação Completa: Google Maps API - Roterizacão, Navegação e Marcações
+
+## 1. ROUTES API - Base de Roterizacão
+
+### Service Endpoint Principal
+```
+Base URL: https://routes.googleapis.com
+```
+
+---
+
+## 1.1 MÉTODO: Compute Routes
+
+**Endpoint:**
+```
+POST /directions/v2:computeRoutes
+```
+
+**Função:** Retorna a rota primária com rotas alternativas opcionais, dados um conjunto de waypoints terminais e intermediários.
+
+### Request Parameters
+
+```json
+{
+  "origin": {
+    "location": {
+      "latLng": {
+        "latitude": -23.5505,
+        "longitude": -46.6333
+      }
+    }
+  },
+  "destination": {
+    "location": {
+      "latLng": {
+        "latitude": -23.4729,
+        "longitude": -46.5641
+      }
+    }
+  },
+  "intermediates": [
+    {
+      "location": {
+        "latLng": {
+          "latitude": -23.4856,
+          "longitude": -46.5815
+        }
+      }
+    }
+  ],
+  "travelMode": "DRIVE",
+  "routingPreference": "TRAFFIC_AWARE",
+  "departureTime": "2024-02-02T10:59:00Z",
+  "trafficModel": "BEST_GUESS",
+  "alternatives": true,
+  "languageCode": "pt-BR",
+  "units": "METRIC",
+  "waypoints": [
+    {
+      "location": {
+        "latLng": {
+          "latitude": -23.5000,
+          "longitude": -46.6000
+        }
+      },
+      "via": false,
+      "vehicleStopover": true
+    }
+  ]
+}
+```
+
+### Parâmetros Detalhados
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-----------|
+| `origin` | Object | **Obrigatório**. Localização de partida com latitude/longitude |
+| `destination` | Object | **Obrigatório**. Localização de destino com latitude/longitude |
+| `intermediates` | Array | Waypoints intermediários (até 25 para rota avançada) |
+| `travelMode` | String | Modo de transporte: DRIVE, WALK, BICYCLE, TWO_WHEELER, TRANSIT |
+| `routingPreference` | String | TRAFFIC_AWARE, TRAFFIC_AWARE_OPTIMAL, TRAFFIC_UNAWARE |
+| `departureTime` | String | ISO 8601 format. Ex: "2024-02-02T10:59:00Z" |
+| `trafficModel` | String | BEST_GUESS, PESSIMISTIC, OPTIMISTIC |
+| `alternatives` | Boolean | Retornar rotas alternativas (padrão: false) |
+| `languageCode` | String | Idioma das instruções: pt-BR, en-US, es-ES, etc |
+| `units` | String | METRIC ou IMPERIAL |
+| `polylineQuality` | String | HIGH_QUALITY ou OVERVIEW |
+| `computeAlternativeRoutes` | Boolean | Calcular rotas alternativas |
+| `routeModifiers` | Object | Modificadores de rota (tolls, highways, etc) |
+
+### Response Structure
+
+```json
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "startLocation": {
+            "latLng": {
+              "latitude": -23.5505,
+              "longitude": -46.6333
+            }
+          },
+          "endLocation": {
+            "latLng": {
+              "latitude": -23.4856,
+              "longitude": -46.5815
+            }
+          },
+          "duration": "1800s",
+          "staticDuration": "1800s",
+          "distanceMeters": 45000,
+          "polyline": {
+            "encodedPolyline": "cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcFhCjA..."
+          },
+          "steps": [
+            {
+              "location": {
+                "latLng": {
+                  "latitude": -23.5505,
+                  "longitude": -46.6333
+                }
+              },
+              "distanceMeters": 500,
+              "staticDuration": "30s",
+              "polyline": {
+                "encodedPolyline": "cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcF..."
+              },
+              "navigationInstruction": {
+                "maneuver": "DEPART",
+                "instructions": "Saia pela Av. Paulista em direção Sul",
+                "junctionName": "Avenida Paulista"
+              },
+              "trafficCondition": "NORMAL"
+            }
+          ],
+          "trafficSpeedEntry": [
+            {
+              "speed": 60.0,
+              "duration": "300s"
+            }
+          ]
+        }
+      ],
+      "distanceMeters": 45000,
+      "duration": "1800s",
+      "staticDuration": "1800s",
+      "polyline": {
+        "encodedPolyline": "cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcFhCjA..."
+      },
+      "overviewPolyline": {
+        "encodedPolyline": "cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcF..."
+      },
+      "warnings": [],
+      "wayPointOrder": [0, 1, 2],
+      "localizedValues": {
+        "distance": {
+          "text": "45 km"
+        },
+        "duration": {
+          "text": "30 minutos"
+        },
+        "staticDuration": {
+          "text": "30 minutos"
+        }
+      }
+}
+```
+
+### Estrutura de Response Detalhada
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `routes` | Array | Array de rotas possíveis |
+| `legs` | Array | Segmentos da rota entre waypoints |
+| `startLocation` | LatLng | Localização inicial do segmento |
+| `endLocation` | LatLng | Localização final do segmento |
+| `duration` | String | Duração considerando tráfego |
+| `staticDuration` | String | Duração sem considerar tráfego |
+| `distanceMeters` | Integer | Distância em metros |
+| `polyline` | Object | Polilinha codificada (detalhada) |
+| `steps` | Array | Instruções passo a passo |
+| `navigationInstruction` | Object | Manobra e instruções para navegação |
+| `trafficCondition` | String | NORMAL, SLOW, CONGESTED, CLOSED |
+| `overviewPolyline` | Object | Polilinha simplificada da rota completa |
+
+---
+
+## 1.2 MÉTODO: Compute Route Matrix
+
+**Endpoint:**
+```
+POST /distanceMatrix/v2:computeRouteMatrix
+```
+
+**Função:** Calcula tempos de viagem e distâncias para múltiplos destinos (até 625 elementos de rota).
+
+### Request Parameters
+
+```json
+{
+  "origins": [
+    {
+      "waypoint": {
+        "location": {
+          "latLng": {
+            "latitude": -23.5505,
+            "longitude": -46.6333
+          }
+        }
+      }
+    },
+    {
+      "waypoint": {
+        "location": {
+          "latLng": {
+            "latitude": -23.4856,
+            "longitude": -46.5815
+          }
+        }
+      }
+    }
+  ],
+  "destinations": [
+    {
+      "waypoint": {
+        "location": {
+          "latLng": {
+            "latitude": -23.4729,
+            "longitude": -46.5641
+          }
+        }
+      }
+    },
+    {
+      "waypoint": {
+        "location": {
+          "latLng": {
+            "latitude": -23.5000,
+            "longitude": -46.6000
+          }
+        }
+      }
+    }
+  ],
+  "travelMode": "DRIVE",
+  "routingPreference": "TRAFFIC_AWARE",
+  "departureTime": "2024-02-02T10:59:00Z"
+}
+```
+
+### Response Structure
+
+```json
+{
+  "rows": [
+    {
+      "elements": [
+        {
+          "originIndex": 0,
+          "destinationIndex": 0,
+          "duration": "1800s",
+          "distanceMeters": 45000,
+          "staticDuration": "1800s",
+          "status": "OK",
+          "condition": "ROUTE_EXISTS"
+        },
+        {
+          "originIndex": 0,
+          "destinationIndex": 1,
+          "duration": "2400s",
+          "distanceMeters": 65000,
+          "staticDuration": "2400s",
+          "status": "OK",
+          "condition": "ROUTE_EXISTS"
+        }
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 2. DIRECTIONS SERVICE - Google Maps JavaScript API
+
+### Inicializar Directions Service
+
+```javascript
+const directionsService = new google.maps.DirectionsService();
+const directionsRenderer = new google.maps.DirectionsRenderer();
+```
+
+### Request Parameters
+
+```javascript
+const request = {
+  origin: { lat: -23.5505, lng: -46.6333 },
+  destination: { lat: -23.4729, lng: -46.5641 },
+  waypoints: [
+    {
+      location: { lat: -23.4856, lng: -46.5815 },
+      stopover: true
+    }
+  ],
+  travelMode: google.maps.TravelMode.DRIVING,
+  trafficModel: google.maps.TrafficModel.BEST_GUESS,
+  transitOptions: {
+    arrivalTime: new Date(Date.now() + 86400000),
+    modes: [google.maps.TransitMode.BUS],
+    routePreference: google.maps.TransitRoutePreference.FEWER_TRANSFERS
+  },
+  drivingOptions: {
+    departureTime: new Date(Date.now() + 3600000),
+    trafficModel: google.maps.TrafficModel.PESSIMISTIC
+  },
+  unitSystem: google.maps.UnitSystem.METRIC,
+  avoidHighways: false,
+  avoidTolls: false,
+  avoidFerries: false,
+  optimizeWaypoints: true,
+  provideRouteAlternatives: true,
+  region: 'br'
+};
+
+directionsService.route(request, (result, status) => {
+  if (status === google.maps.DirectionsStatus.OK) {
+    directionsRenderer.setDirections(result);
+  }
+});
+```
+
+### Travel Modes Disponíveis
+
+| Modo | Valor | Descrição |
+|------|-------|-----------|
+| DRIVING | 'DRIVING' | Roteamento para carros |
+| WALKING | 'WALKING' | Roteamento para pedestres |
+| BICYCLING | 'BICYCLING' | Roteamento para bicicletas |
+| TRANSIT | 'TRANSIT' | Transporte público |
+| TWO_WHEELER | 'TWO_WHEELER' | Motos/scooters |
+
+---
+
+## 3. POLYLINE (Polilinha) - Estrutura e Implementação
+
+### 3.1 Encoded Polyline Format
+
+**O que é:** Formato comprimido que codifica uma sequência de coordenadas em uma string.
+
+**Exemplo:**
+```
+"cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcFhCjA|LfJlAT~@IpDi@jAb@f@HXi@t@kBhBeBx@Qz@z@dClHzFpW`H|RvTpj@`AxAdBdAnAXhB?fBk@rAcAnG_HhCgAjAKrATbA`Al@lBHnAc@rFgBhIkCxMBfIlBvHnBtCnB|AnEdCrJxFj@fB@h@OhAgCtHGfCl@jAlA\jE]tDBzBb@tLxFtK~E`d@hShIzEtDhDxDrEfDpFlFjNvDtRdDjThF`TzH`QhEhG|EvFhL`JpJtE|LpEdOpFjOzGlPfJlHzE~NjLfQvPfP|RtHrKxDjGfI|NdHbOvGjPfCbHpCtIvJh_@vG|[|CtNvFvSvE~MfI|QzLbTfNxQbKlKrRzP|NnNvNlQjIzMnLfV`T|h@nDbHhIdMxFjH~JrMnEfHzIrQfHvOtEjI|MnQfNzP`FzI~EnLrKp[nDlHvErHzL~MbRbM"
+```
+
+### 3.2 Criar Polyline no Mapa
+
+```javascript
+// Criar polyline diretamente com coordenadas
+const polyline = new google.maps.Polyline({
+  path: [
+    { lat: -23.5505, lng: -46.6333 },
+    { lat: -23.4856, lng: -46.5815 },
+    { lat: -23.4729, lng: -46.5641 }
+  ],
+  geodesic: true,
+  strokeColor: "#FF0000",
+  strokeOpacity: 0.8,
+  strokeWeight: 3,
+  clickable: true,
+  draggable: false,
+  editable: false,
+  visible: true,
+  zIndex: 1,
+  icons: [],
+  map: map
+});
+
+// OU decodificar polyline encodada
+const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
+const polyline = new google.maps.Polyline({
+  path: decodedPath,
+  map: map,
+  strokeColor: "#FF0000",
+  strokeWeight: 2
+});
+```
+
+### 3.3 Polyline Options Completas
+
+| Propriedade | Tipo | Descrição |
+|-------------|------|-----------|
+| `path` | Array | Sequência de coordenadas LatLng ou LatLngLiteral |
+| `geodesic` | Boolean | Se true, interpreta arestas como geodésicas |
+| `strokeColor` | String | Cor da linha em formato hex (#RRGGBB) |
+| `strokeOpacity` | Number | Opacidade da linha (0.0 a 1.0) |
+| `strokeWeight` | Number | Largura da linha em pixels |
+| `clickable` | Boolean | Se o usuário pode clicar na polyline |
+| `draggable` | Boolean | Se o usuário pode arrastar a polyline |
+| `editable` | Boolean | Se o usuário pode editar os pontos |
+| `visible` | Boolean | Se a polyline está visível |
+| `zIndex` | Number | Ordem de empilhamento |
+| `icons` | Array | Ícones para mostrar ao longo da linha |
+| `map` | Map | O mapa onde a polyline será exibida |
+
+### 3.4 Eventos de Polyline
+
+```javascript
+polyline.addListener('click', (event) => {
+  console.log('Polyline clicada em:', event.latLng);
+});
+
+polyline.addListener('contextmenu', (event) => {
+  console.log('Menu de contexto na polyline');
+});
+
+polyline.addListener('dblclick', (event) => {
+  console.log('Duplo clique na polyline');
+});
+
+polyline.addListener('drag', (event) => {
+  console.log('Arrastando polyline');
+});
+
+polyline.addListener('dragend', (event) => {
+  console.log('Fim do arrasto');
+});
+
+polyline.addListener('dragstart', (event) => {
+  console.log('Início do arrasto');
+});
+
+polyline.addListener('mousedown', (event) => {
+  console.log('Mouse pressionado');
+});
+
+polyline.addListener('mousemove', (event) => {
+  console.log('Mouse movendo');
+});
+
+polyline.addListener('mouseout', (event) => {
+  console.log('Mouse saiu da polyline');
+});
+
+polyline.addListener('mouseover', (event) => {
+  console.log('Mouse sobre a polyline');
+});
+
+polyline.addListener('mouseup', (event) => {
+  console.log('Mouse liberado');
+});
+```
+
+---
+
+## 4. MARKERS (Marcadores) - Estrutura Completa
+
+### 4.1 Criar Marker Básico
+
+```javascript
+const marker = new google.maps.Marker({
+  position: { lat: -23.5505, lng: -46.6333 },
+  map: map,
+  title: "São Paulo",
+  label: "A"
+});
+```
+
+### 4.2 Marker Options Completas
+
+```javascript
+const markerOptions = {
+  // Posição (obrigatório)
+  position: { lat: -23.5505, lng: -46.6333 },
+  
+  // Mapa onde será exibido (obrigatório)
+  map: map,
+  
+  // Informações do marcador
+  title: "Ponto de Interesse",
+  label: {
+    text: "A",
+    color: "white",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+  
+  // Customização do ícone
+  icon: "http://example.com/custom-marker.png",
+  
+  // OU usar ícone SVG
+  icon: {
+    path: "M-1.547 12l6.563-6.609-1.406-1.406-5.156 5.203-2.063-2.109-1.406 1.406zM0 0q2.906 0 4.945 2.039t2.039 4.945q0 1.453-0.727 3.328t-1.758 3.516-2.039 3.070-1.711 2.273l-0.75 0.797q-0.281-0.328-0.75-0.867t-1.688-2.156-2.133-3.141-1.664-3.445-0.75-3.375q0-2.906 2.039-4.945t4.945-2.039z",
+    fillColor: "#0066FF",
+    fillOpacity: 0.6,
+    strokeWeight: 0,
+    rotation: 0,
+    scale: 2,
+    anchor: new google.maps.Point(0, 20)
+  },
+  
+  // OU usar ícone complexo
+  icon: {
+    url: "http://example.com/marker.png",
+    size: new google.maps.Size(20, 32),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(10, 32),
+    scaledSize: new google.maps.Size(25, 25),
+    labelOrigin: new google.maps.Point(10, 10)
+  },
+  
+  // Região clicável (shape)
+  shape: {
+    coords: [1, 1, 1, 20, 18, 20, 18, 1],
+    type: "poly"
+  },
+  
+  // Interatividade
+  clickable: true,
+  draggable: false,
+  optimized: true,
+  
+  // Animação
+  animation: google.maps.Animation.DROP,
+  
+  // Ordem de empilhamento
+  zIndex: 100,
+  
+  // Opacidade
+  opacity: 1.0,
+  
+  // Visibilidade
+  visible: true,
+  
+  // Cursor ao passar o mouse
+  cursor: "pointer"
+};
+
+const marker = new google.maps.Marker(markerOptions);
+```
+
+### 4.3 Animation Values
+
+| Animação | Valor | Descrição |
+|----------|-------|-----------|
+| DROP | `google.maps.Animation.DROP` | Marker cai de cima até sua posição final |
+| BOUNCE | `google.maps.Animation.BOUNCE` | Marker pula continuamente |
+
+### 4.4 Métodos de Marker
+
+```javascript
+// Remover marker do mapa
+marker.setMap(null);
+
+// Adicionar de volta ao mapa
+marker.setMap(map);
+
+// Obter posição
+const position = marker.getPosition();
+
+// Definir nova posição
+marker.setPosition({ lat: -23.4729, lng: -46.5641 });
+
+// Obter título
+const title = marker.getTitle();
+
+// Definir título
+marker.setTitle("Novo Título");
+
+// Obter mapa
+const currentMap = marker.getMap();
+
+// Obter ícone
+const icon = marker.getIcon();
+
+// Definir novo ícone
+marker.setIcon("http://example.com/new-icon.png");
+
+// Controlar animação
+marker.setAnimation(google.maps.Animation.BOUNCE);
+marker.setAnimation(null); // Parar animação
+
+// Obter animação atual
+const animation = marker.getAnimation();
+
+// Controlar arrasto
+marker.setDraggable(true);
+
+// Obter estado de arrasto
+const isDraggable = marker.getDraggable();
+
+// Controlar visibilidade
+marker.setVisible(false);
+
+// Obter visibilidade
+const isVisible = marker.getVisible();
+
+// Definir zIndex
+marker.setZIndex(100);
+
+// Obter zIndex
+const zIndex = marker.getZIndex();
+
+// Definir opacidade
+marker.setOpacity(0.5);
+
+// Obter opacidade
+const opacity = marker.getOpacity();
+
+// Definir label
+marker.setLabel("B");
+
+// Obter label
+const label = marker.getLabel();
+```
+
+### 4.5 Eventos de Marker
+
+```javascript
+// Click no marker
+marker.addListener('click', () => {
+  console.log('Marker clicado');
+  infoWindow.open(map, marker);
+});
+
+// Duplo clique
+marker.addListener('dblclick', () => {
+  console.log('Duplo clique no marker');
+});
+
+// Menu de contexto
+marker.addListener('rightclick', () => {
+  console.log('Clique direito no marker');
+});
+
+// Mouse enter
+marker.addListener('mouseenter', () => {
+  console.log('Mouse entrou no marker');
+  marker.setIcon('http://example.com/hover-icon.png');
+});
+
+// Mouse leave
+marker.addListener('mouseleave', () => {
+  console.log('Mouse saiu do marker');
+  marker.setIcon('http://example.com/normal-icon.png');
+});
+
+// Início do arrasto
+marker.addListener('dragstart', (event) => {
+  console.log('Iniciando arrasto em:', event.latLng);
+});
+
+// Durante arrasto
+marker.addListener('drag', (event) => {
+  console.log('Arrastando até:', event.latLng);
+});
+
+// Fim do arrasto
+marker.addListener('dragend', (event) => {
+  console.log('Arrasto finalizado em:', event.latLng);
+  // Atualizar banco de dados com nova posição
+  updateMarkerPosition(marker.getPosition());
+});
+
+// Animação iniciada
+marker.addListener('animation_changed', () => {
+  console.log('Animação do marker mudou');
+});
+
+// Posição mudou
+marker.addListener('position_changed', () => {
+  console.log('Posição do marker:', marker.getPosition());
+});
+
+// Ícone mudou
+marker.addListener('icon_changed', () => {
+  console.log('Ícone do marker mudou');
+});
+
+// Título mudou
+marker.addListener('title_changed', () => {
+  console.log('Título do marker:', marker.getTitle());
+});
+
+// Visibilidade mudou
+marker.addListener('visible_changed', () => {
+  console.log('Visibilidade do marker:', marker.getVisible());
+});
+
+// ZIndex mudou
+marker.addListener('zindex_changed', () => {
+  console.log('ZIndex do marker:', marker.getZIndex());
+});
+
+// Mapa mudou
+marker.addListener('map_changed', () => {
+  console.log('Mapa do marker mudou');
+});
+```
+
+---
+
+## 5. INFO WINDOW - Janelas de Informação
+
+### 5.1 Criar Info Window
+
+```javascript
+const infoWindow = new google.maps.InfoWindow({
+  content: `<div style="color: #000;">
+    <h3>Localização</h3>
+    <p>São Paulo, SP</p>
+    <p>Latitude: -23.5505</p>
+    <p>Longitude: -46.6333</p>
+  </div>`,
+  ariaLabel: "Informação da localização",
+  disableAutoPan: false,
+  maxWidth: 300
+});
+
+// Abrir quando marker é clicado
+marker.addListener('click', () => {
+  infoWindow.open(map, marker);
+});
+```
+
+### 5.2 Info Window Options
+
+```javascript
+const infoWindowOptions = {
+  // Conteúdo (HTML ou texto)
+  content: "<h3>Título</h3><p>Descrição</p>",
+  
+  // Ou usando elemento HTML
+  content: document.getElementById('info-content'),
+  
+  // Rótulo ARIA para acessibilidade
+  ariaLabel: "Informação do local",
+  
+  // Não aplicar pan automático quando abrir
+  disableAutoPan: false,
+  
+  // Máximo de largura
+  maxWidth: 300,
+  
+  // Deslocar em pixels [x, y]
+  pixelOffset: new google.maps.Size(0, -30)
+};
+
+const infoWindow = new google.maps.InfoWindow(infoWindowOptions);
+```
+
+### 5.3 Info Window Methods
+
+```javascript
+// Abrir em posição ou associado a marker
+infoWindow.open(map, marker);
+infoWindow.open({
+  map: map,
+  position: { lat: -23.5505, lng: -46.6333 }
+});
+
+// Fechar
+infoWindow.close();
+
+// Definir conteúdo
+infoWindow.setContent("<p>Novo conteúdo</p>");
+
+// Obter conteúdo
+const content = infoWindow.getContent();
+
+// Definir posição
+infoWindow.setPosition({ lat: -23.4729, lng: -46.5641 });
+
+// Obter posição
+const position = infoWindow.getPosition();
+
+// Definir zIndex
+infoWindow.setZIndex(100);
+
+// Obter mapa
+const currentMap = infoWindow.getMap();
+
+// Definir mapa
+infoWindow.setMap(map);
+```
+
+---
+
+## 6. EXEMPLO COMPLETO: Rota com Polilinha e Marcadores
+
+```javascript
+function initMap() {
+  const map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 11,
+    center: { lat: -23.5505, lng: -46.6333 },
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+
+  const directionsService = new google.maps.DirectionsService();
+  const directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
+
+  // Ponto de partida
+  const origin = { lat: -23.5505, lng: -46.6333 };
+  const destination = { lat: -23.4729, lng: -46.5641 };
+  const waypoints = [
+    {
+      location: { lat: -23.4856, lng: -46.5815 },
+      stopover: true
+    }
+  ];
+
+  // Criar request
+  const request = {
+    origin: origin,
+    destination: destination,
+    waypoints: waypoints,
+    travelMode: google.maps.TravelMode.DRIVING,
+    provideRouteAlternatives: true,
+    optimizeWaypoints: true
+  };
+
+  // Solicitar rota
+  directionsService.route(request, function(result, status) {
+    if (status === google.maps.DirectionsStatus.OK) {
+      // Desenhar rota
+      directionsRenderer.setDirections(result);
+
+      // Adicionar marcadores personalizados
+      const route = result.routes[0];
+      
+      // Marker de origem
+      new google.maps.Marker({
+        position: origin,
+        map: map,
+        title: 'Origem',
+        label: 'A',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+      });
+
+      // Markers de waypoints
+      route.waypoint_order.forEach((index, i) => {
+        new google.maps.Marker({
+          position: waypoints[index].location,
+          map: map,
+          title: 'Parada ' + (i + 1),
+          label: String.fromCharCode(66 + i),
+          icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+        });
+      });
+
+      // Marker de destino
+      new google.maps.Marker({
+        position: destination,
+        map: map,
+        title: 'Destino',
+        label: 'Z',
+        icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+      });
+
+      // Exibir informações
+      const legs = route.legs;
+      let totalDistance = 0;
+      let totalDuration = 0;
+
+      legs.forEach(leg => {
+        totalDistance += leg.distance.value;
+        totalDuration += leg.duration.value;
+      });
+
+      console.log('Distância total: ' + (totalDistance / 1000).toFixed(2) + ' km');
+      console.log('Duração total: ' + (totalDuration / 60).toFixed(0) + ' minutos');
+
+      // Desenhar polyline customizada
+      const polylineCoords = [];
+      legs.forEach(leg => {
+        leg.steps.forEach(step => {
+          polylineCoords.push(step.start_location);
+        });
+        polylineCoords.push(leg.end_location);
+      });
+
+      const polyline = new google.maps.Polyline({
+        path: polylineCoords,
+        geodesic: true,
+        strokeColor: '#0066FF',
+        strokeOpacity: 0.7,
+        strokeWeight: 3,
+        map: map
+      });
+
+    } else {
+      console.error('Erro ao calcular rota: ' + status);
+    }
+  });
+}
+
+// Inicializar quando página carrega
+document.addEventListener('DOMContentLoaded', initMap);
+```
+
+---
+
+## 7. Decodificação de Polyline Encodada
+
+### Decodificar usando Google Maps API
+
+```javascript
+// Primeiro, incluir a biblioteca de geometria
+// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY&libraries=geometry"></script>
+
+const encodedPolyline = "cxwnFtdct@dAQlAf@fAf@|Aq@l@]pCcF...";
+const decodedPath = google.maps.geometry.encoding.decodePath(encodedPolyline);
+
+// Usar no mapa
+const polyline = new google.maps.Polyline({
+  path: decodedPath,
+  map: map,
+  strokeColor: '#FF0000',
+  strokeWeight: 2
+});
+
+// Ou codificar um array de pontos
+const points = [
+  { lat: -23.5505, lng: -46.6333 },
+  { lat: -23.4856, lng: -46.5815 },
+  { lat: -23.4729, lng: -46.5641 }
+];
+const encoded = google.maps.geometry.encoding.encodePath(points);
+console.log('Polyline codificada:', encoded);
+```
+
+---
+
+## 8. Configuração de Autenticação
+
+### Header Obrigatório para Requests REST
+
+```javascript
+const headers = {
+  'Content-Type': 'application/json',
+  'X-Goog-Api-Key': 'YOUR_API_KEY'
+};
+
+// OU usar Authorization Bearer
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': 'Bearer ' + accessToken
+};
+
+// OU incluir na URL
+const url = 'https://routes.googleapis.com/directions/v2:computeRoutes?key=YOUR_API_KEY';
+```
+
+### Exemplo de Fetch Request
+
+```javascript
+async function computeRoute() {
+  const request = {
+    origin: {
+      location: {
+        latLng: {
+          latitude: -23.5505,
+          longitude: -46.6333
+        }
+      }
+    },
+    destination: {
+      location: {
+        latLng: {
+          latitude: -23.4729,
+          longitude: -46.5641
+        }
+      }
+    },
+    travelMode: 'DRIVE',
+    routingPreference: 'TRAFFIC_AWARE'
+  };
+
+  try {
+    const response = await fetch('https://routes.googleapis.com/directions/v2:computeRoutes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': 'YOUR_API_KEY'
+      },
+      body: JSON.stringify(request)
+    });
+
+    const data = await response.json();
+    console.log('Rota calculada:', data);
+    return data;
+  } catch (error) {
+    console.error('Erro ao calcular rota:', error);
+  }
+}
+```
+
+---
+
+## 9. Status Codes e Mensagens de Erro
+
+| Status | Descrição |
+|--------|-----------|
+| OK | Sucesso |
+| NOT_FOUND | Rota não encontrada |
+| ZERO_RESULTS | Nenhum resultado encontrado |
+| MAX_WAYPOINTS_EXCEEDED | Excedeu limite de waypoints |
+| INVALID_REQUEST | Parâmetros inválidos |
+| OVER_QUERY_LIMIT | Limite de requisições excedido |
+| REQUEST_DENIED | Requisição negada (chave inválida) |
+| UNKNOWN_ERROR | Erro desconhecido do servidor |
+| ROUTING_ERROR | Erro ao calcular rota |
+
+---
+
+## 10. Limites e Cotas
+
+| Limite | Valor |
+|--------|-------|
+| Waypoints básicos | até 10 |
+| Waypoints avançados | até 25 |
+| Matriz de rotas | até 625 elementos (origem × destino) |
+| Requisições por segundo | Varia com plano |
+| Requisições por dia | Varia com plano |
+| Polylines por mapa | Sem limite técnico |
+| Markers por mapa | ~100-200 (depende do navegador) |
+
+---
+
+## 11. Best Practices
+
+1. **Cache de Rotas:** Armazenar rotas frequentes para evitar múltiplas requisições
+2. **Decode Polylines:** Usar decodificação da polyline para melhorar performance
+3. **Otimizar Waypoints:** Usar `optimizeWaypoints: true` para melhor rota
+4. **Limitar Atualização:** Não atualizar rotas a cada movimento do usuário
+5. **Tratamento de Erros:** Sempre tratar possíveis erros e status da API
+6. **Usar Geometry Library:** Importar `geometry` para cálculos avançados
+7. **Adicionar InfoWindow:** Mostrar informações detalhadas ao clicar
+8. **Acessibilidade:** Usar atributos ARIA em marcadores
+9. **Performance:** Usar `optimized: true` em markers para muitos pontos
+10. **Estilos:** Customizar cores e ícones de acordo com a marca
+
+---
+
+**Desenvolvido para:** API Integration e Roterizacão - Google Maps Platform
+**Última atualização:** 02/02/2026
+**Versão:** 1.0

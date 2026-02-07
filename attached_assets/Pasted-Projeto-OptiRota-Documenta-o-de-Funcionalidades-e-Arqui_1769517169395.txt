@@ -1,0 +1,76 @@
+Projeto OptiRota: Documentação de Funcionalidades e Arquitetura
+1. Funcionalidades Implementadas e Lógica de Negócio
+A. Otimização de Rotas e GPS
+Algoritmo Nearest Neighbor (Backend): Migração da lógica de ordenação para uma função SQL no Supabase. O sistema envia a coordenada atual (lat/lng) e o ID do itinerário, e o banco de dados reordena as paradas pendentes por proximidade geográfica.
+
+Visualização Mapbox: Traçado dinâmico via GeoJSON conectando o dispositivo às paradas na ordem exata definida pelo banco.
+
+Sincronização Visual: Alinhamento garantido entre os marcadores no mapa e a lista de entregas através do campo sequence_order.
+
+B. Gestão de Entregas e Itinerários
+Ciclo de Vida (Status): Estados pending, current, delivered e failed. A atualização de status dispara a re-otimização para a próxima entrega.
+
+Persistência de Histórico: Itinerários finalizados como completed mantêm o registro fiel da rota percorrida e ganhos obtidos.
+
+Controle de Pacotes: Identificação sequencial reiniciada a cada novo itinerário.
+
+C. Interface e UX
+Identidade e Feedback: Favicon oficial (pin azul) e modais de bloqueio (Loading) durante processos assíncronos de otimização para evitar inconsistência de dados.
+
+Financeiro: Campo total_earnings calculado em tempo real com base no valor de cada stop concluída com sucesso.
+
+2. Arquitetura de Dados (Supabase/PostgreSQL)
+Estrutura de Tabelas
+Core: accounts, users, subscriptions.
+
+Operacional: itineraries, stops (contendo lat, lng, sequence_order e status).
+
+Financeiro: expenses, incomes.
+
+Lógica de Isolamento (Multitenancy)
+Isolamento rigoroso de dados via account_id, garantindo que um motorista ou empresa jamais acesse rotas de terceiros.
+
+Automação via RPC (Funções de Banco)
+create_account_with_trial: Criação atômica de conta e período de teste.
+
+optimize_route_by_distance (NOVO): Função SQL que utiliza cálculos matemáticos (ou extensão PostGIS) para atualizar o sequence_order das paradas baseado na localização atual do usuário.
+
+
+Projeto OptiRota: Documentação de Funcionalidades e Arquitetura
+1. Funcionalidades Implementadas e Lógica de Negócio
+A. Otimização de Rotas e GPS
+Algoritmo Nearest Neighbor: Implementado no frontend. Captura a localização GPS em tempo real e reordena paradas pendentes partindo da posição atual até a mais próxima sucessivamente.
+
+Visualização Mapbox: Traçado dinâmico via GeoJSON conectando o dispositivo às paradas na ordem otimizada.
+
+Sincronização Visual: Marcadores numéricos ("1", "2", "3") no mapa rigorosamente alinhados à ordem da lista lateral.
+
+B. Gestão de Entregas e Itinerários
+Ciclo de Vida (Status): Estados pending, current, delivered e failed. A conclusão de uma parada altera a cor do marcador para cinza e ativa a próxima.
+
+Persistência de Histórico: Itinerários finalizados são marcados como completed, preservando dados de ganhos e paradas.
+
+Controle de Pacotes: Numeração reiniciada do "1" a cada novo itinerário criado.
+
+C. Interface e UX
+Identidade: Favicon personalizado (pin azul OptiRota).
+
+Feedback: Modais de loading durante a criação de rotas para evitar concorrência de requisições.
+
+Financeiro: Lógica de total_earnings que acumula o valor de cada entrega concluída no itinerário.
+
+2. Arquitetura de Dados (Supabase/PostgreSQL)
+Estrutura de Tabelas
+O sistema utiliza um modelo relacional robusto no PostgreSQL:
+
+Core: accounts, users, subscriptions.
+
+Operacional: itineraries, stops.
+
+Financeiro: expenses, incomes.
+
+Lógica de Isolamento (Multitenancy)
+Utilização de account_id em todas as tabelas operacionais para garantir o isolamento completo entre diferentes empresas ou usuários autônomos.
+
+Automação via RPC (Remote Procedure Call)
+Função create_account_with_trial: Uma transação atômica que cria a conta, o usuário administrador e vincula uma assinatura de teste de 16 dias, garantindo integridade referencial desde o primeiro acesso.

@@ -1,0 +1,92 @@
+# Documentação Completa: Pagamentos Pix na Stripe
+
+O Pix é um sistema de pagamento instantâneo desenvolvido pelo Banco Central do Brasil. Na Stripe, a integração permite que empresas aceitem pagamentos de clientes brasileiros com confirmação em tempo real.
+
+## 1. Endpoints Principais (Direct API)
+
+### Criar um PaymentIntent
+Para iniciar um pagamento Pix, você deve criar um `PaymentIntent` especificando `pix` como tipo de método de pagamento.
+
+*   **Endpoint:** `POST https://api.stripe.com/v1/payment_intents`
+*   **Parâmetros Necessários:**
+    *   `amount`: Valor em centavos (mínimo 50 centavos de BRL).
+    *   `currency`: Deve ser `brl`.
+    *   `payment_method_types[]`: `pix`.
+*   **Exemplo de Requisição (cURL):**
+    ```bash
+    curl https://api.stripe.com/v1/payment_intents \
+      -u "sk_test_..." \
+      -d "payment_method_types[]"=pix \
+      -d amount=1000 \
+      -d currency=brl
+    ```
+
+### Confirmar o Pagamento (Client-side)
+Após criar o `PaymentIntent`, use o Stripe.js no frontend para confirmar o pagamento e exibir o QR Code.
+
+*   **Função:** `stripe.confirmPixPayment(clientSecret, data)`
+*   **Dados Necessários:**
+    *   `billing_details`: Nome, e-mail e `tax_id` (CPF ou CNPJ).
+    *   `return_url`: URL para onde o cliente será redirecionado após o pagamento.
+*   **Exemplo (JavaScript):**
+    ```javascript
+    const {error} = await stripe.confirmPixPayment(
+      '{{PAYMENT_INTENT_CLIENT_SECRET}}',
+      {
+        payment_method: {
+          billing_details: {
+            name: 'Nome do Cliente',
+            email: 'cliente@email.com',
+            tax_id: '000.000.000-00',
+          }
+        },
+        return_url: 'https://seusite.com/sucesso',
+      }
+    );
+    ```
+
+## 2. Fluxo de Pagamento
+1.  **Criação:** O servidor cria um `PaymentIntent`.
+2.  **Confirmação:** O cliente fornece os dados (CPF/CNPJ) e confirma.
+3.  **Instruções:** A Stripe gera um QR Code e uma chave Pix (string).
+4.  **Pagamento:** O cliente paga através do app do banco dele.
+5.  **Notificação:** A Stripe envia um webhook confirmando o sucesso.
+
+## 3. Webhooks (Eventos Importantes)
+Como o Pix é um método de pagamento assíncrono, o uso de webhooks é obrigatório para a entrega de produtos/serviços.
+
+| Evento | Descrição |
+| :--- | :--- |
+| `payment_intent.requires_action` | Enviado quando o código Pix é gerado com sucesso. |
+| `payment_intent.succeeded` | Enviado quando o pagamento é confirmado. |
+| `payment_intent.payment_failed` | Enviado se o código Pix expirar ou o pagamento falhar. |
+
+## 4. Reembolsos (Refunds)
+Você pode reembolsar pagamentos Pix em até 90 dias após a data original.
+
+*   **Endpoint:** `POST https://api.stripe.com/v1/refunds`
+*   **Parâmetros:**
+    *   `payment_intent`: ID do PaymentIntent original.
+    *   `amount`: (Opcional) Valor para reembolso parcial.
+
+## 5. Configurações Adicionais (IOF e Expiração)
+
+### Imposto sobre Operações Financeiras (IOF)
+Para empresas fora do Brasil, incide uma taxa de 3,5% de IOF.
+*   `amount_includes_iof`:
+    *   `never` (padrão): O cliente paga o IOF (valor final no app do banco será +3.5%).
+    *   `always`: A empresa absorve o custo do IOF.
+
+### Expiração do Código Pix
+O padrão é 24 horas, mas pode ser customizado entre 10 segundos e 14 dias.
+*   Parâmetro: `payment_method_options[pix][expires_after_seconds]`
+
+## 6. Limites e Regras
+*   **Valor Mínimo:** 0,50 BRL.
+*   **Valor Máximo:** $3,000 USD por transação (convertido para BRL).
+*   **Limite Mensal:** $10,000 USD por comprador por empresa.
+*   **Assinaturas:** O Pix não suporta pagamentos recorrentes automáticos (apenas pagamentos únicos).
+
+## 7. Ambiente de Teste
+*   **CPF de Teste:** `000.000.000-00`.
+*   **Simulação:** No ambiente de teste, ao clicar em "Pagar", você verá um botão "Simulate scan" para autorizar ou expirar o pagamento manualmente.

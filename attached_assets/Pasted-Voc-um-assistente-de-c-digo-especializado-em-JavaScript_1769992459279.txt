@@ -1,0 +1,142 @@
+Você é um assistente de código especializado em JavaScript, HTML e Leaflet.js.
+
+Quero que você construa uma pequena aplicação web (um único arquivo index.html) que faça o seguinte:
+
+OBJETIVO GERAL
+-------------
+Criar uma tela de mapa (Leaflet) para simular roteirização de entregas em uma rua de mão dupla, com dois modos de atendimento (carro e a pé), permitindo:
+1. Representar os dois lados da rua como segmentos separados.
+2. O usuário clicar em cada segmento para definir a ordem de visita.
+3. Calcular o comprimento dos segmentos e rotulá-los como "carro" ou "pé" com base em uma regra simples (exemplo: > 50 m = carro, <= 50 m = pé).
+4. Depois, simular uma "otimização" de rota e desenhar a trajetória no mapa.
+5. Oferecer um botão "Refinar rota" que, ao ser clicado, permita:
+   - Inverter a ordem atual da rota.
+   - Alternar para "ordenar rota manualmente" (onde o usuário clica de novo nos segmentos para reordenar).
+
+IMPORTANTE:
+- Use Leaflet 1.9.x, carregando CSS/JS de CDN oficial.
+- Não use frameworks adicionais (React, Vue, etc.). Apenas HTML, CSS e JS puro.
+- O código deve rodar apenas abrindo o index.html no navegador.
+
+DETALHES TÉCNICOS
+-----------------
+
+1. Mapa Leaflet
+---------------
+- Crie o mapa com `L.map('map', { center: [-23.9600, -46.3300], zoom: 17 })`.
+- Adicione um `L.tileLayer` qualquer (pode ser OSM) só para visualização.
+- Estilize o div #map com altura de 500px e largura 100%.
+
+2. Dois lados de uma rua (simulados)
+------------------------------------
+- Simule dois segmentos de rua, lado esquerdo e lado direito, com coordenadas fixas (exemplo próximo a Santos/SP).
+
+Exemplo aproximado de coordenadas:
+- Lado esquerdo:
+  - [-23.9600, -46.3310]
+  - [-23.9600, -46.3295]
+- Lado direito:
+  - [-23.9601, -46.3310]
+  - [-23.9601, -46.3295]
+
+- Crie dois `L.polyline`:
+  - `ruaLadoEsq` (color: 'blue', weight: 6)
+  - `ruaLadoDir` (color: 'green', weight: 6)
+- Atribua um identificador a cada um:
+  - `ruaLadoEsq.idSegmento = 'lado_esq'`
+  - `ruaLadoDir.idSegmento = 'lado_dir'`
+
+3. Cálculo de distância e rótulo carro / pé
+-------------------------------------------
+- Implemente uma função `calcularComprimento(layer)` que:
+  - Usa `layer.getLatLngs()` para pegar a lista de LatLng.
+  - Soma as distâncias entre cada par consecutivo usando `map.distance(latlngs[i], latlngs[i+1])`.
+  - Retorna a distância total em metros.
+- Implemente `classificarModo(comprimento)` com a regra de demo:
+  - Se `comprimento > 50` metros => retorna `'carro'`.
+  - Caso contrário => retorna `'pe'`.
+- Ao clicar em um segmento:
+  - Calcule o comprimento.
+  - Classifique o modo (`carro`/`pe`).
+  - Guarde essas infos no próprio layer (`layer.comprimento`, `layer.modo`).
+
+4. Clique para marcar ordem de segmentos
+----------------------------------------
+- Tenha um array global `ordemVisita = []`, que vai guardar objetos:
+  - `{ id, modo, comprimento }`.
+- Implemente `bindClick(layer)` que:
+  - Adiciona um listener `'click'` ao layer.
+  - No clique:
+    - Calcula `comprimento`.
+    - Define `modo`.
+    - Faz `ordemVisita.push({ id: layer.idSegmento, modo, comprimento })`.
+    - Atualiza o estilo do layer para indicar que foi selecionado (ex.: cor diferente).
+    - Atualiza um painel de texto (#info) mostrando a ordem de visita.
+
+- Para estilo, implemente `aplicarEstiloPorModo(layer, modo, selecionado)`:
+  - Se `modo === 'carro'`: usar cor azul (#007bff), weight 6.
+  - Se `modo === 'pe'`: usar vermelho (#ff0000), weight 4, `dashArray: '6,4'`.
+  - Se `selecionado === true`: `opacity: 0.9`; senão: `opacity: 0.5`.
+
+5. Painel de informações
+------------------------
+- Crie um `<div id="info"></div>` abaixo do mapa, com estilo simples (monospace).
+- Implemente `atualizarInfo()` que percorre `ordemVisita` e mostra algo como:
+  - `1. lado_esq | carro | 100.0 m`
+  - `2. lado_dir | pe | 40.0 m`
+- Ao final, exiba uma mensagem do tipo:
+  - `(A partir dessa lista você envia os segmentos para o otimizador real.)`
+
+6. Simular otimização de rota
+-----------------------------
+- Não precisa implementar um algoritmo complexo; apenas:
+  - Considere `ordemVisita` como rota atual.
+  - Crie uma função `desenharRota()` que:
+    - Constrói uma lista de coordenadas concatenando os latlngs dos segments na ordem de `ordemVisita`.
+    - Desenha um `L.polyline` extra sobre o mapa com essa rota (ex.: cor roxa '#8000ff', weight 4).
+  - Sempre que a rota for "otimizada" (simulada) refaça esse polyline (remova o anterior, se existir).
+
+7. Botão "Otimizar rota" e "Refinar rota"
+-----------------------------------------
+- Crie dois botões acima ou abaixo do mapa:
+  - Botão 1: "Otimizar rota"
+  - Botão 2: "Refinar rota"
+- "Otimizar rota":
+  - Para esta demo, pode apenas chamar `desenharRota()` usando a `ordemVisita` atual.
+- "Refinar rota":
+  - Ao clicar, deve mostrar duas opções simples:
+    - Botão "Inverter rota"
+    - Botão "Ordenar manualmente"
+  - "Inverter rota":
+    - Faz `ordemVisita.reverse()`.
+    - Chama `desenharRota()` de novo.
+    - Atualiza o painel `#info`.
+  - "Ordenar manualmente":
+    - Limpe `ordemVisita`.
+    - Restaure o estilo dos segmentos para um estado "não selecionado".
+    - Avise no `#info` que o usuário deve clicar novamente nos segmentos na ordem desejada.
+    - A partir daí, o fluxo volta a ser igual ao inicial (cliques montando `ordemVisita`).
+
+8. Ajuste da visão
+------------------
+- No final do script, use:
+  - `map.fitBounds(L.featureGroup([ruaLadoEsq, ruaLadoDir]).getBounds());`
+- Isso centraliza o mapa nos dois segmentos.
+
+ESTRUTURA FINAL DO ARQUIVO
+--------------------------
+- index.html contendo:
+  - <head> com import do CSS do Leaflet.
+  - <body> com:
+    - <div id="map"></div>
+    - Botões: "Otimizar rota", "Refinar rota" (e, após clicar em "Refinar rota", mostrar os sub-botões "Inverter rota" e "Ordenar manualmente").
+    - <div id="info"></div>
+  - <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">...</script>
+  - <script> com todo o JS descrito acima.
+
+ENTREGA
+-------
+- Entregue o conteúdo completo do index.html, pronto para ser salvo e aberto no navegador.
+- O código deve estar organizado e comentado de forma clara, destacando onde:
+  - Eu posso plugar um otimizador real (backend).
+  - Eu posso trocar os segmentos simulados por dados reais de GeoJSON/OSM.

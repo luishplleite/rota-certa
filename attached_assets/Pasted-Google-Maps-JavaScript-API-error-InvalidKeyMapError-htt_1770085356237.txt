@@ -1,0 +1,101 @@
+Google Maps JavaScript API error: InvalidKeyMapError
+https://developers.google.com/maps/documentation/javascript/error-messages#invalid-key-map-error
+_.Fm @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1266
+cza @ map.js:45
+$ya @ map.js:44
+aza @ map.js:42
+await in aza
+(anonymous) @ map.js:102
+_.z.qE @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1557
+setTimeout
+_.wq @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1321
+_.z.start @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1557
+_.yq @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1322
+changed @ map.js:102
+$n @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1283
+_.Yn.bindTo @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1471
+jAa @ map.js:64
+(anonymous) @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1349
+Promise.then
+_.or @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1349
+(anonymous) @ RouteMap.tsx:76
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=27a3ea0a:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=27a3ea0a:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=27a3ea0a:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=27a3ea0a:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=27a3ea0a:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=27a3ea0a:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=27a3ea0a:19500
+(anonymous) @ chunk-LPF6KSF2.js?v=27a3ea0a:19381
+workLoop @ chunk-LPF6KSF2.js?v=27a3ea0a:197
+flushWork @ chunk-LPF6KSF2.js?v=27a3ea0a:176
+performWorkUntilDeadline @ chunk-LPF6KSF2.js?v=27a3ea0a:384Understand this error
+js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1266 Google Maps JavaScript API error: InvalidKeyMapError
+https://developers.google.com/maps/documentation/javascript/error-messages#invalid-key-map-error
+_.Fm @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1266
+(anonymous) @ common.js:221
+(anonymous) @ common.js:223
+c @ common.js:111
+(anonymous) @ AuthenticationService.Authenticate?1shttps%3A%2F%2F2d34d639-c6db-4fea-80c7-fbcaba4c5ff2-00-19kjt6haxhemg.picard.replit.dev%2Fplan&4s%24%7BGOOGLE_MAPS_API_KEY%7D&8b0&callback=_xdc_._3ei89b&key=%24%7BGOOGLE_MAPS_API_KEY%7D&token=81172:1
+PendingScript
+zka @ common.js:54
+(anonymous) @ common.js:110
+(anonymous) @ common.js:110
+_.Gz @ common.js:111
+(anonymous) @ common.js:223
+(anonymous) @ common.js:220
+(anonymous) @ common.js:43
+mh @ common.js:221
+_.zI @ util.js:12
+tLa @ directions.js:9
+(anonymous) @ directions.js:148
+route @ directions.js:145
+(anonymous) @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1486
+Promise.then
+route @ js?key=${GOOGLE_MAPS_API_KEY}&libraries=places,geometry&language=pt-BR&region=BR&callback=__googleMapsCallback:1486
+(anonymous) @ RouteMap.tsx:331
+commitHookEffectListMount @ chunk-LPF6KSF2.js?v=27a3ea0a:16963
+commitPassiveMountOnFiber @ chunk-LPF6KSF2.js?v=27a3ea0a:18206
+commitPassiveMountEffects_complete @ chunk-LPF6KSF2.js?v=27a3ea0a:18179
+commitPassiveMountEffects_begin @ chunk-LPF6KSF2.js?v=27a3ea0a:18169
+commitPassiveMountEffects @ chunk-LPF6KSF2.js?v=27a3ea0a:18159
+flushPassiveEffectsImpl @ chunk-LPF6KSF2.js?v=27a3ea0a:19543
+flushPassiveEffects @ chunk-LPF6KSF2.js?v=27a3ea0a:19500
+commitRootImpl @ chunk-LPF6KSF2.js?v=27a3ea0a:19469
+commitRoot @ chunk-LPF6KSF2.js?v=27a3ea0a:19330
+performSyncWorkOnRoot @ chunk-LPF6KSF2.js?v=27a3ea0a:18948
+flushSyncCallbacks @ chunk-LPF6KSF2.js?v=27a3ea0a:9166
+(anonymous) @ chunk-LPF6KSF2.js?v=27a3ea0a:18677
+setTimeout
+scheduleFn @ @tanstack_react-query.js?v=27a3ea0a:537
+flush @ @tanstack_react-query.js?v=27a3ea0a:551
+batch @ @tanstack_react-query.js?v=27a3ea0a:569
+#dispatch @ @tanstack_react-query.js?v=27a3ea0a:963
+setData @ @tanstack_react-query.js?v=27a3ea0a:672
+onSuccess @ @tanstack_react-query.js?v=27a3ea0a:865
+resolve @ @tanstack_react-query.js?v=27a3ea0a:442
+Promise.then
+run @ @tanstack_react-query.js?v=27a3ea0a:481
+start @ @tanstack_react-query.js?v=27a3ea0a:518
+fetch @ @tanstack_react-query.js?v=27a3ea0a:893
+fetchQuery @ @tanstack_react-query.js?v=27a3ea0a:1687
+prefetchQuery @ @tanstack_react-query.js?v=27a3ea0a:1690
+prefetchData @ LoginPage.tsx:30
+await in prefetchData
+handleSubmit @ LoginPage.tsx:63
+await in handleSubmit
+callCallback2 @ chunk-LPF6KSF2.js?v=27a3ea0a:3680
+invokeGuardedCallbackDev @ chunk-LPF6KSF2.js?v=27a3ea0a:3705
+invokeGuardedCallback @ chunk-LPF6KSF2.js?v=27a3ea0a:3739
+invokeGuardedCallbackAndCatchFirstError @ chunk-LPF6KSF2.js?v=27a3ea0a:3742
+executeDispatch @ chunk-LPF6KSF2.js?v=27a3ea0a:7046
+processDispatchQueueItemsInOrder @ chunk-LPF6KSF2.js?v=27a3ea0a:7066
+processDispatchQueue @ chunk-LPF6KSF2.js?v=27a3ea0a:7075
+dispatchEventsForPlugins @ chunk-LPF6KSF2.js?v=27a3ea0a:7083
+(anonymous) @ chunk-LPF6KSF2.js?v=27a3ea0a:7206
+batchedUpdates$1 @ chunk-LPF6KSF2.js?v=27a3ea0a:18966
+batchedUpdates @ chunk-LPF6KSF2.js?v=27a3ea0a:3585
+dispatchEventForPluginEventSystem @ chunk-LPF6KSF2.js?v=27a3ea0a:7205
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-LPF6KSF2.js?v=27a3ea0a:5484
+dispatchEvent @ chunk-LPF6KSF2.js?v=27a3ea0a:5478
+dispatchDiscreteEvent @ chunk-LPF6KSF2.js?v=27a3ea0a:5455
